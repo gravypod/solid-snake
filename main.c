@@ -3,7 +3,6 @@
 #include <GLFW/glfw3.h>
 #include <GL/glut.h>
 
-
 #include <sys/stat.h>
 
 #define ROWS 100
@@ -110,6 +109,7 @@ void s_draw()
     duk_get_global_string(ctx, "game");
     duk_push_string(ctx, "render");
     duk_pcall_prop(ctx, -2, 0 /*nargs*/);
+    duk_pop_2(ctx);
 
     //printf("\tFinished\n");
 }
@@ -119,6 +119,7 @@ void s_init()
     duk_get_global_string(ctx, "game");
     duk_push_string(ctx, "init");
     duk_pcall_prop(ctx, -2, 0 /*nargs*/);
+    duk_pop_2(ctx);
 }
 
 
@@ -191,6 +192,7 @@ void s_update()
     duk_push_string(ctx, "update");
     duk_push_number(ctx, delta);
     duk_pcall_prop(ctx, -3, 1 /*nargs*/);
+    duk_pop_2(ctx);
 
     //printf("\nFinished\n");
     glutPostRedisplay();
@@ -203,6 +205,7 @@ void s_keypress(unsigned char key, int x, int y)
     duk_push_string(ctx, "keypress");
     duk_push_number(ctx, key);
     duk_pcall_prop(ctx, -3, 1 /*nargs*/);
+    duk_pop_2(ctx);
 }
 
 
