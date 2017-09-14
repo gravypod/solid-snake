@@ -118,7 +118,13 @@ game.keypress = function (key) {
     var is_conflicting = function (a, b) {
         return game.direction === a && key === b || game.direction === b && key === a;
     };
+    // Make sure this direction makes sense
     if (is_conflicting(up, down) || is_conflicting(left, right))
         return;
+    // Make sure they clicked a real button
+    if (up !== key && down !== key && left !== key && right !== key)
+        return;
+
+    // Update the direction
     game.direction = key;
 }
