@@ -8,8 +8,8 @@
 #define ROWS 100
 #define COLS 100
 
-#define SCREEN_W 800
-#define SCREEN_H 800
+#define SCREEN_W 400
+#define SCREEN_H 400
 
 static duk_ret_t native_print(duk_context *ctx) {
     duk_push_string(ctx, " ");
