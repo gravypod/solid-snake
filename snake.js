@@ -127,4 +127,4 @@ game.keypress = function (key) {
 
     // Update the direction
     game.direction = key;
-}
+};
