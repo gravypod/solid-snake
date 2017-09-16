@@ -16,16 +16,12 @@
 static long get_update_delta()
 {
     static long start = -1;
+    if (start == -1)
+        start = glutGet(GLUT_ELAPSED_TIME);
 
-    long delta;
-
-    long current = glutGet(GLUT_ELAPSED_TIME);
-    if (start == -1) {
-        delta = 0;
-    } else {
-        delta = start - current;
-    }
-    start = current;
+    long time  = glutGet(GLUT_ELAPSED_TIME);
+    long delta = time - start;
+    start = time;
     return delta;
 }
 
