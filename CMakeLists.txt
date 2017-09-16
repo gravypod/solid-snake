@@ -4,7 +4,8 @@ project(engine)
 #set(CMAKE_CXX_STANDARD 11)
 #set(CMAKE_C_STANDARD c99)
 
-set(SOURCE_FILES main.c duktape.c) # scripting.h scripting.c interfacing.c interfacing.h glad.c)
+
+set(SOURCE_FILES src/main.c src/scripting/duktape.c src/scripting/interface.c src/scripting/interface.h src/scripting/script.h src/drawing.c src/drawing.h) # scripting.h scripting.c interfacing.c interfacing.h glad.c)
 
 set(CMAKE_INCLUDE_CURRENT_DIR  ON)
 

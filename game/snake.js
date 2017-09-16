@@ -1,14 +1,10 @@
+include("drawing.js");
+
+
 var game = {}; // Game Object
 var up = 119, left = 97, down = 115, right = 100; // KeyCodes end
 var ROWS = 100, COLS = 100;
 
-function draw_snake_dot(location) {
-    cube(location.x, location.y, false);
-}
-
-function draw_food_dot(location) {
-    cube(location.x, location.y, true);
-}
 
 function is_same_dot(a, b) {
     return a.x === b.x && a.y === b.y;
@@ -19,6 +15,27 @@ function is_location_in_snake(loc) {
         return is_same_dot(dot, loc);
     }).length > 0;
 }
+
+
+function make_location_to(direction, from_location) {
+    var location = {x: from_location.x, y: from_location.y};
+    switch (direction) {
+        case up:
+            location.y += 1;
+            break;
+        case down:
+            location.y -= 1;
+            break;
+        case left:
+            location.x -= 1;
+            break;
+        case right:
+            location.x += 1;
+            break;
+    }
+    return location;
+}
+
 
 function make_location() {
     while (true) {
@@ -49,6 +66,9 @@ game.init = function () {
 
     game.num_dots = 3;
     game.dots = [];
+    game.dots.get_head = function () {
+        return game.dots[game.dots.length - 1];
+    };
 
     game.direction = null;
 
@@ -57,13 +77,15 @@ game.init = function () {
     game.dots.push(make_location());
     game.food = make_location();
 
+    game.direction_changed = false;
+
 };
 
 game.update = function (delta) {
     if (!is_ready_for_tick(delta) || game.dots.length === 0)
         return;
 
-    var last_dot = game.dots[game.dots.length - 1];
+    var last_dot = game.dots.get_head();
 
     if (is_same_dot(last_dot, game.food)) {
         game.num_dots += 1;
@@ -72,23 +94,7 @@ game.update = function (delta) {
 
     // Movement
     if (game.direction !== null) {
-        var next = {x: last_dot.x, y: last_dot.y};
-        //print("Adding next dot");
-        switch (game.direction) {
-            case up:
-                next.y += 1;
-                break;
-            case down:
-                next.y -= 1;
-                break;
-            case left:
-                next.x -= 1;
-                break;
-            case right:
-                next.x += 1;
-                break;
-        }
-
+        var next = make_location_to(game.direction, last_dot);
 
         // Fail states
         if (next.x < 0 || next.x > ROWS || next.y < 0 || next.y > COLS || is_location_in_snake(next)) {
@@ -98,12 +104,14 @@ game.update = function (delta) {
 
         // If we didn't die, take this new location and push it into the snake.
         game.dots.push(next);
-
+        game.direction_changed = false;
     }
 
     // Remove oldest dots from snake.
     while (game.dots.length > game.num_dots)
         game.dots.shift();
+
+    game.updating = false;
 };
 
 game.render = function () {
@@ -125,6 +133,11 @@ game.keypress = function (key) {
     if (up !== key && down !== key && left !== key && right !== key)
         return;
 
+    // Protect against people who type too fast.
+    if (game.direction_changed)
+        return;
+
     // Update the direction
     game.direction = key;
+    game.direction_changed = true;
 };
