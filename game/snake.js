@@ -1,60 +1,17 @@
 include("drawing.js");
-
+include("location.js");
 
 var game = {}; // Game Object
 var up = 119, left = 97, down = 115, right = 100; // KeyCodes end
 var ROWS = 100, COLS = 100;
 
 
-function is_same_dot(a, b) {
-    return a.x === b.x && a.y === b.y;
-}
-
-function is_location_in_snake(loc) {
-    return game.dots.filter(function (dot) {
-        return is_same_dot(dot, loc);
-    }).length > 0;
-}
-
-
-function make_location_to(direction, from_location) {
-    var location = {x: from_location.x, y: from_location.y};
-    switch (direction) {
-        case up:
-            location.y += 1;
-            break;
-        case down:
-            location.y -= 1;
-            break;
-        case left:
-            location.x -= 1;
-            break;
-        case right:
-            location.x += 1;
-            break;
-    }
-    return location;
-}
-
-
-function make_location() {
-    while (true) {
-        var location = {
-            x: Math.floor(Math.random() * (ROWS)),
-            y: Math.floor(Math.random() * (COLS))
-        };
-
-        if (!is_location_in_snake(location))
-            return location;
-    }
-}
-
 // Limit update speed
 var total_d = 0;
 
 function is_ready_for_tick(delta) {
-    total_d -= delta;
-    if (total_d > 100) {
+    total_d += delta;
+    if (total_d >= 100) {
         total_d = 0;
         return true;
     }
@@ -69,13 +26,23 @@ game.init = function () {
     game.dots.get_head = function () {
         return game.dots[game.dots.length - 1];
     };
+    game.dots.is_inside = function (loc) {
+        return game.dots.filter(function (dot) { return is_same_location(dot, loc); }).length !== 0;
+    };
+    game.dots.find_empty_location = function () {
+        while (true) {
+            var loc = random_location();
+            if (!game.dots.is_inside(loc))
+                return loc;
+        }
+    };
 
     game.direction = null;
 
     game.food = null;
 
-    game.dots.push(make_location());
-    game.food = make_location();
+    game.dots.push(game.dots.find_empty_location());
+    game.food = game.dots.find_empty_location();
 
     game.direction_changed = false;
 
@@ -87,9 +54,9 @@ game.update = function (delta) {
 
     var last_dot = game.dots.get_head();
 
-    if (is_same_dot(last_dot, game.food)) {
+    if (is_same_location(last_dot, game.food)) {
         game.num_dots += 1;
-        game.food = make_location();
+        game.food = game.dots.find_empty_location();
     }
 
     // Movement
@@ -97,7 +64,7 @@ game.update = function (delta) {
         var next = make_location_to(game.direction, last_dot);
 
         // Fail states
-        if (next.x < 0 || next.x > ROWS || next.y < 0 || next.y > COLS || is_location_in_snake(next)) {
+        if (next.x < 0 || next.x > ROWS || next.y < 0 || next.y > COLS || game.dots.is_inside(next)) {
             game.init();
             return;
         }
