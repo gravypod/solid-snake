@@ -7,11 +7,8 @@
 #include <GL/gl.h>
 
 // Draw a cube on the screen
-void cube(float x, float y, int food)
+void cube(float x, float y, float width, float height, int food)
 {
-
-#define CUBE_WIDTH  1
-#define CUBE_HEIGHT 1
 
     // Food is red, snake is white
     if (food)
@@ -22,10 +19,10 @@ void cube(float x, float y, int food)
 
     glBegin(GL_POLYGON);
     {
-        glVertex3f(x,               y,              0.0);
-        glVertex3f(x + CUBE_HEIGHT, y,              0.0);
-        glVertex3f(x + CUBE_HEIGHT, y + CUBE_WIDTH, 0.0);
-        glVertex3f(x              , y + CUBE_WIDTH, 0.0);
+        glVertex3f(        x,          y, 0.0);
+        glVertex3f(x + width,          y, 0.0);
+        glVertex3f(x + width, y + height, 0.0);
+        glVertex3f(        x, y + height, 0.0);
     }
     glEnd();
 }

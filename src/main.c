@@ -6,9 +6,6 @@
 
 #include "drawing.h"
 
-#define ROWS 100
-#define COLS 100
-
 #define SCREEN_W 400
 #define SCREEN_H 400
 
@@ -45,7 +42,7 @@ void init()
         exit(1);
     }
 
-    REGISTER_SCRIPT_INTERFACE("cube", s_cube, 3);
+    REGISTER_SCRIPT_INTERFACE("cube", s_cube, 5);
 
     // Load our script file
     if (!include_script("snake.js")) {
@@ -72,7 +69,7 @@ int main(int argc, char **argv) {
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0.0, ROWS, 0.0, COLS, -1.0, 1.0);
+    glOrtho(0.0, 1, 0.0, 1, -1.0, 1.0);
 
     //glutIdleFunc(s_update);
     glutKeyboardFunc(s_keypress);
