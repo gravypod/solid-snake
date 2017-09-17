@@ -19,14 +19,14 @@ static void s_update(const double delta)
 }
 
 // Call script game.keypress()
-static void s_keypress(const unsigned char key/*, const bool pressed*/)
+static void s_keypress(const unsigned char key, const bool pressed)
 {
 
     duk_get_global_string(ctx, "game");
     duk_push_string(ctx, "keypress");
     duk_push_number(ctx, key);
-    //duk_push_boolean(ctx, pressed);
-    duk_pcall_prop(ctx, -3, 1 /*nargs*/);
+    duk_push_boolean(ctx, pressed);
+    duk_pcall_prop(ctx, -4, 2 /*nargs*/);
     duk_pop_2(ctx);
 }
 

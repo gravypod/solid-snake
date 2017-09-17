@@ -81,7 +81,11 @@ game.render = function () {
         draw_food_dot(game.food)
 };
 
-game.keypress = function (key) {
+game.keypress = function (key, pressed) {
+
+    if (pressed !== true)
+        return;
+
     // Skip directions that don't make sense
     var is_conflicting = function (a, b) {
         return game.direction === a && key === b || game.direction === b && key === a;

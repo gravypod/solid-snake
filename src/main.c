@@ -10,7 +10,7 @@
 #define SCREEN_H 400
 
 void update()
-{w
+{
     static double start       = 0;
     const double current_time = glfwGetTime();
     const double delta        = current_time - start;
@@ -56,7 +56,7 @@ void on_screen_resize(GLFWwindow *window, int width, int height)
 
 void on_key_press(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    s_keypress((const unsigned char) key/*, action == GLFW_PRESS*/);
+    s_keypress((const unsigned char) key, action == GLFW_PRESS);
 }
 
 
