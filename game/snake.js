@@ -2,21 +2,9 @@ include("drawing.js");
 include("location.js");
 
 var game = {}; // Game Object
-var up = 119, left = 97, down = 115, right = 100; // KeyCodes end
+var up = 87, left = 65, down = 83, right = 68; // KeyCodes end
 var ROWS = 100, COLS = 100;
 
-
-// Limit update speed
-var total_d = 0;
-
-function is_ready_for_tick(delta) {
-    total_d += delta;
-    if (total_d >= 100) {
-        total_d = 0;
-        return true;
-    }
-    return false;
-}
 
 game.init = function () {
     game.keypressed = null;
@@ -46,11 +34,16 @@ game.init = function () {
 
     game.direction_changed = false;
 
+    game.total_wait = 0;
 };
 
 game.update = function (delta) {
-    if (!is_ready_for_tick(delta) || game.dots.length === 0)
+
+    game.total_wait += delta * 100;
+    if (game.total_wait <= 5 || game.dots.length === 0) {
         return;
+    }
+    game.total_wait = 0;
 
     var last_dot = game.dots.get_head();
 

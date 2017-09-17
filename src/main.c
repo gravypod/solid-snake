@@ -1,8 +1,8 @@
 #include "src/scripting/interface.h"
 #include "src/scripting/script.h"
 
+#include "lib/glad/glad.h"
 #include <GLFW/glfw3.h>
-#include <GL/glut.h>
 
 #include "drawing.h"
 
@@ -10,14 +10,14 @@
 #define SCREEN_H 400
 
 
-static long get_update_delta()
+static double get_update_delta()
 {
-    static long start = -1;
+    static double start = -1;
     if (start == -1)
-        start = glutGet(GLUT_ELAPSED_TIME);
+        start = glfwGetTime();
 
-    long time  = glutGet(GLUT_ELAPSED_TIME);
-    long delta = time - start;
+    const double time = glfwGetTime();
+    double      delta = time - start;
     start = time;
     return delta;
 }
@@ -31,7 +31,6 @@ void draw()
         s_draw();
     }
     glFlush();
-    glutPostRedisplay();
 }
 
 
@@ -54,16 +53,46 @@ void init()
 }
 
 
+void on_screen_resize(GLFWwindow *window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+}
+
+
+void on_key_press(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    s_keypress((const unsigned char) key/*, action == GLFW_PRESS*/);
+}
+
+
 int main(int argc, char **argv) {
 
     init(); // Init our code.
 
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
+    glfwInit();
+    //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    glutInitWindowPosition(100, 100);
-    glutInitWindowSize(SCREEN_W, SCREEN_H);
-    glutCreateWindow("Hello World");
+    GLFWwindow* window = glfwCreateWindow(SCREEN_W, SCREEN_H, "Solid Engine", NULL, NULL);
+
+    if (!window)
+    {
+        printf("Failed to create window!\n");
+        glfwTerminate();
+        return 1;
+    }
+
+    glfwMakeContextCurrent(window);
+
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
+    {
+        printf("Failed to load open GL api\n");
+        return 1;
+    }
+
+    glfwSetFramebufferSizeCallback(window, on_screen_resize);
+    glfwSetKeyCallback(window, on_key_press);
 
     // Screen is black
     glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -71,10 +100,13 @@ int main(int argc, char **argv) {
     glLoadIdentity();
     glOrtho(0.0, 1, 0.0, 1, -1.0, 1.0);
 
-    //glutIdleFunc(s_update);
-    glutKeyboardFunc(s_keypress);
-    glutDisplayFunc(draw);
-    glutMainLoop();
+    while (!glfwWindowShouldClose(window))
+    {
+        draw();
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+    glfwTerminate();
 
     return 0;
 }
