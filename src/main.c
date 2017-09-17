@@ -9,23 +9,18 @@
 #define SCREEN_W 400
 #define SCREEN_H 400
 
+void update()
+{w
+    static double start       = 0;
+    const double current_time = glfwGetTime();
+    const double delta        = current_time - start;
+    start = current_time;
 
-static double get_update_delta()
-{
-    static double start = -1;
-    if (start == -1)
-        start = glfwGetTime();
-
-    const double time = glfwGetTime();
-    double      delta = time - start;
-    start = time;
-    return delta;
+    s_update(delta);
 }
-
 
 void draw()
 {
-    s_update(get_update_delta());
     glClear(GL_COLOR_BUFFER_BIT);
     {
         s_draw();
@@ -70,9 +65,6 @@ int main(int argc, char **argv) {
     init(); // Init our code.
 
     glfwInit();
-    //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow* window = glfwCreateWindow(SCREEN_W, SCREEN_H, "Solid Engine", NULL, NULL);
 
@@ -102,7 +94,9 @@ int main(int argc, char **argv) {
 
     while (!glfwWindowShouldClose(window))
     {
+        update();
         draw();
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
