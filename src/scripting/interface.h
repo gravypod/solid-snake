@@ -16,6 +16,7 @@
 duk_context *ctx;
 
 bool init_interface();
+char* read_file(const char* filename);
 bool include_script(const char *filename);
 
 #endif //ENGINE_INTERFACE_H

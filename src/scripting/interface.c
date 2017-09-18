@@ -17,15 +17,13 @@ off_t fsize(const char *filename)
     return -1;
 }
 
-
-bool include_script(const char *filename)
+char* read_file(const char* filename)
 {
     const size_t file_size = (size_t) fsize(filename);
     FILE *f;
 
     if (file_size == -1 || !(f = fopen(filename, "rb"))) {
-        duk_push_undefined(ctx);
-        return false;
+        return NULL;
     }
 
     size_t data_left = file_size;
@@ -42,10 +40,20 @@ bool include_script(const char *filename)
 
     fclose(f);
 
-    // Load script into memory
-    if (duk_peval_lstring_noresult(ctx, (const char *) buffer, (duk_size_t) file_size) != 0) {
+    return buffer;
+}
+
+
+bool include_script(const char *filename)
+{
+    char *buffer = read_file(filename);
+
+    if (!buffer)
         return false;
-    }
+
+    // Load script into memory
+    if (duk_peval_lstring_noresult(ctx, (const char *) buffer, (duk_size_t) strlen(buffer)) != 0)
+        return false;
 
     return true;
 }
@@ -53,7 +61,13 @@ bool include_script(const char *filename)
 static duk_ret_t native_include(duk_context *ctx)
 {
     const char *file_name = duk_require_string(ctx, 0);
-    return include_script(file_name) ? 0 : 1;
+
+    if (include_script(file_name))
+        duk_push_boolean(ctx, true);
+    else
+        duk_push_boolean(ctx, false);
+
+    return 1;
 }
 
 static duk_ret_t native_print(duk_context *ctx)
@@ -65,6 +79,18 @@ static duk_ret_t native_print(duk_context *ctx)
     return 0;
 }
 
+static duk_ret_t native_read(duk_context *ctx)
+{
+    const char *file_name = duk_require_string(ctx, 0);
+    const char *data      = read_file(file_name);
+
+    if (data)
+        duk_push_lstring(ctx, data, strlen(data));
+    else
+        duk_push_null(ctx);
+
+    return 1;
+}
 
 
 bool init_interface()
@@ -74,8 +100,9 @@ bool init_interface()
     if (!ctx)
         return false;
 
-    REGISTER_SCRIPT_INTERFACE(  "print",   native_print, DUK_VARARGS);
-    REGISTER_SCRIPT_INTERFACE("include", native_include,           1);
+    REGISTER_SCRIPT_INTERFACE(    "print",   native_print, DUK_VARARGS);
+    REGISTER_SCRIPT_INTERFACE(  "include", native_include,           1);
+    REGISTER_SCRIPT_INTERFACE("read_file",    native_read,           1);
 
     return true;
 }
