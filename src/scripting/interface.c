@@ -4,6 +4,7 @@
 
 #include "interface.h"
 #include <sys/stat.h>
+#include "importhistory.h"
 
 /* Native functions */
 
@@ -46,6 +47,9 @@ char* read_file(const char* filename)
 
 bool include_script(const char *filename)
 {
+    if (!should_import(filename))
+        return true;
+
     char *buffer = read_file(filename);
 
     if (!buffer)
@@ -54,6 +58,10 @@ bool include_script(const char *filename)
     // Load script into memory
     if (duk_peval_lstring_noresult(ctx, (const char *) buffer, (duk_size_t) strlen(buffer)) != 0)
         return false;
+
+    free(buffer);
+
+    mark_imported(filename);
 
     return true;
 }
