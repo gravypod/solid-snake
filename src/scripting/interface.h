@@ -6,7 +6,7 @@
 #define ENGINE_INTERFACE_H
 
 #include <stdbool.h>
-#include "duktape.h"
+#include "lib/duktape/duktape.h"
 
 #define REGISTER_SCRIPT_INTERFACE(name, f, nargs) { \
     duk_push_c_function(ctx, f, nargs);             \

@@ -5,7 +5,7 @@
 #ifndef ENGINE_DRAWING_H
 #define ENGINE_DRAWING_H
 
-#include "src/scripting/duktape.h"
+#include "lib/duktape/duktape.h"
 
 void cube(float x, float y, float width, float height, int food);
 
