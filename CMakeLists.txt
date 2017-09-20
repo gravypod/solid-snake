@@ -5,7 +5,7 @@ project(engine)
 #set(CMAKE_C_STANDARD c99)
 
 
-set(SOURCE_FILES lib/glad/glad.c src/main.c lib/duktape/duktape.c src/scripting/interface.c src/scripting/interface.h src/scripting/script.h src/drawing.c src/drawing.h src/scripting/importhistory.c src/scripting/importhistory.h) # scripting.h scripting.c interfacing.c interfacing.h glad.c)
+set(SOURCE_FILES lib/glad/glad.c src/main.c lib/duktape/duktape.c src/scripting/interface.c src/scripting/interface.h src/scripting/script.h src/drawing.c src/drawing.h src/util/llist.c src/util/llist.h) # scripting.h scripting.c interfacing.c interfacing.h glad.c)
 
 set(CMAKE_INCLUDE_CURRENT_DIR  ON)
 

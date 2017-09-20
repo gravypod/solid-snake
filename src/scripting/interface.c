@@ -4,7 +4,9 @@
 
 #include "interface.h"
 #include <sys/stat.h>
-#include "importhistory.h"
+#include "src/util/llist.h"
+
+llist *imported_scripts = NULL;
 
 /* Native functions */
 
@@ -47,8 +49,10 @@ char* read_file(const char* filename)
 
 bool include_script(const char *filename)
 {
-    if (!should_import(filename))
+    if (llist_has(&imported_scripts, filename))
         return true;
+
+    printf("Importing %s\n", filename);
 
     char *buffer = read_file(filename);
 
@@ -61,7 +65,8 @@ bool include_script(const char *filename)
 
     free(buffer);
 
-    mark_imported(filename);
+    llist_add(&imported_scripts, filename, NULL, 0);
+
 
     return true;
 }
