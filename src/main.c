@@ -16,14 +16,14 @@ void update()
     const double delta        = current_time - start;
     start = current_time;
 
-    s_update(delta);
+    script.update(delta);
 }
 
 void draw()
 {
     glClear(GL_COLOR_BUFFER_BIT);
     {
-        s_draw();
+        script.draw();
     }
     glFlush();
 }
@@ -44,7 +44,7 @@ void init()
         exit(1);
     }
 
-    s_init();
+    script.init();
 }
 
 
@@ -56,7 +56,7 @@ void on_screen_resize(GLFWwindow *window, int width, int height)
 
 void on_key_press(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    s_keypress((const unsigned char) key, action == GLFW_PRESS);
+    script.on_keypress((const unsigned char) key, action == GLFW_PRESS);
 }
 
 

@@ -48,4 +48,17 @@ static void s_init()
     duk_pop_2(ctx);
 }
 
+const struct {
+    void (*init)(void);
+    void (*update)(const double);
+    void (*draw)(void);
+    void (*on_keypress)(const unsigned char key, const bool pressed);
+} script = {
+    .init = &s_init,
+    .update = &s_update,
+    .draw = &s_draw,
+    .on_keypress = &s_keypress
+};
+
+
 #endif //ENGINE_SCRIPT_H
