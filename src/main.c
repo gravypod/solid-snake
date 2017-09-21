@@ -6,6 +6,7 @@
 
 #include "drawing.h"
 
+
 #define SCREEN_W 400
 #define SCREEN_H 400
 
@@ -65,6 +66,9 @@ int main(int argc, char **argv) {
     init(); // Init our code.
 
     glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow* window = glfwCreateWindow(SCREEN_W, SCREEN_H, "Solid Engine", NULL, NULL);
 
@@ -86,11 +90,13 @@ int main(int argc, char **argv) {
     glfwSetFramebufferSizeCallback(window, on_screen_resize);
     glfwSetKeyCallback(window, on_key_press);
 
+
     // Screen is black
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0.0, 1, 0.0, 1, -1.0, 1.0);
+
 
     while (!glfwWindowShouldClose(window))
     {
