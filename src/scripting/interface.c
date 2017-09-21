@@ -8,14 +8,10 @@
 
 llist *imported_scripts = NULL;
 
-/* Native functions */
-
 bool include_script(const char *filename)
 {
     if (llist_has(&imported_scripts, filename))
         return true;
-
-    printf("Importing %s\n", filename);
 
     char *buffer = read_file(filename);
 
