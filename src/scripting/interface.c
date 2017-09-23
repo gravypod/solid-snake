@@ -5,6 +5,7 @@
 #include "interface.h"
 #include "src/util/llist.h"
 #include "src/util/files.h"
+#include "src/graphics/style.h"
 
 llist *imported_scripts = NULL;
 
@@ -36,9 +37,12 @@ bool init_interface()
     if (!ctx)
         return false;
 
-    REGISTER_SCRIPT_INTERFACE(    "print",   native_print, DUK_VARARGS);
-    REGISTER_SCRIPT_INTERFACE(  "include", native_include,           1);
-    REGISTER_SCRIPT_INTERFACE("read_file",    native_read,           1);
+    REGISTER_SCRIPT_INTERFACE(     "print",      native_print, DUK_VARARGS); // Standard natives
+    REGISTER_SCRIPT_INTERFACE(   "include",    native_include,           1);
+    REGISTER_SCRIPT_INTERFACE( "read_file",       native_read,           1);
+    REGISTER_SCRIPT_INTERFACE("make_style", native_make_style,           5); // Graphics natives
+    REGISTER_SCRIPT_INTERFACE("draw_style", native_draw_style,           3);
+
 
     return true;
 }

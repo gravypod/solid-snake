@@ -5,7 +5,18 @@ project(engine)
 #set(CMAKE_C_STANDARD c99)
 
 
-set(SOURCE_FILES lib/glad/glad.c src/main.c lib/duktape/duktape.c src/scripting/interface.c src/scripting/interface.h src/scripting/script.h src/drawing.c src/drawing.h src/util/llist.c src/util/llist.h src/util/files.c src/util/files.h) # scripting.h scripting.c interfacing.c interfacing.h glad.c)
+set(SOURCE_FILES
+        lib/glad/glad.c
+        src/main.c
+        lib/duktape/duktape.c
+        src/scripting/interface.c src/scripting/interface.h
+        src/scripting/script.h
+        src/util/llist.c src/util/llist.h
+        src/util/files.c src/util/files.h
+        src/graphics/quadmesh.c src/graphics/quadmesh.h
+        src/graphics/shader.c src/graphics/shader.h
+        src/graphics/style.c
+        src/graphics/style.h lib/linmath/linmath.h)
 
 set(CMAKE_INCLUDE_CURRENT_DIR  ON)
 
