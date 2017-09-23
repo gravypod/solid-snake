@@ -24,7 +24,7 @@ char* read_file(const char* filename);
 /**
  * Native wrapper to read_file
  */
-static duk_ret_t native_read(duk_context *ctx)
+__attribute__((unused)) static duk_ret_t native_read(duk_context *ctx)
 {
     const char *file_name = duk_require_string(ctx, 0);
     const char *data      = read_file(file_name);

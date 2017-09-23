@@ -38,7 +38,7 @@ bool include_script(const char *filename);
 /**
  * Native interface to include_script function
  */
-static duk_ret_t native_include(duk_context *ctx)
+__attribute__((unused)) static duk_ret_t native_include(duk_context *ctx)
 {
     const char *file_name = duk_require_string(ctx, 0);
 
@@ -50,7 +50,7 @@ static duk_ret_t native_include(duk_context *ctx)
     return 1;
 }
 
-static duk_ret_t native_print(duk_context *ctx)
+__attribute__((unused)) static duk_ret_t native_print(duk_context *ctx)
 {
     duk_push_string(ctx, " ");
     duk_insert(ctx, 0);

@@ -12,7 +12,7 @@ void make_style(const char const *name,
                 const char const *vertex_name, const char const *fragment_name);
 void draw_style(const char const *name, float x, float y);
 
-static duk_ret_t native_make_style(duk_context *ctx)
+__attribute__((unused)) static duk_ret_t native_make_style(duk_context *ctx)
 {
     const char const          *name = duk_require_string(ctx, 0);
     const float               width = (float) duk_require_number(ctx, 1);
@@ -23,7 +23,7 @@ static duk_ret_t native_make_style(duk_context *ctx)
     return 0;
 }
 
-static duk_ret_t native_draw_style(duk_context *ctx)
+__attribute__((unused)) static duk_ret_t native_draw_style(duk_context *ctx)
 {
     const char const          *name = duk_require_string(ctx, 0);
     const float                   x = (float) duk_require_number(ctx, 1);

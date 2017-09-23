@@ -47,17 +47,21 @@ void init()
 
 void on_screen_resize(GLFWwindow *window, int width, int height)
 {
+    (void) window;
     glViewport(0, 0, width, height);
 }
 
 
 void on_key_press(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+    (void) window;
+    (void) scancode;
+    (void) mods;
     script.on_keypress((const unsigned char) key, action == GLFW_PRESS);
 }
 
 
-int main(int argc, char **argv) {
+int main() {
 
 
 
