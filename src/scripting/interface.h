@@ -12,6 +12,7 @@
  * Register a native function into the duk context.
  */
 #define REGISTER_SCRIPT_INTERFACE(name, f, nargs) { \
+    (void) f;                                       \
     duk_push_c_function(ctx, f, nargs);             \
     duk_put_global_string(ctx, name);               \
 }
