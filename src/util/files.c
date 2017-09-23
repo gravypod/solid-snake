@@ -21,13 +21,14 @@ long int fsize(const char *filename)
 
 char* read_file(const char* filename)
 {
-    const size_t file_size = (size_t) fsize(filename);
+    long int reported_size = fsize(filename);
     FILE *f;
 
-    if (file_size == -1 || !(f = fopen(filename, "rb"))) {
+    if (reported_size == -1 || !(f = fopen(filename, "rb"))) {
         return NULL;
     }
 
+    const size_t file_size = (size_t) reported_size;
     size_t data_left = file_size;
     char *buffer = malloc(file_size + 1);
     char *tmp    = buffer;
