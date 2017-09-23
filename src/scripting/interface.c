@@ -41,7 +41,7 @@ bool init_interface()
     REGISTER_SCRIPT_INTERFACE(   "include",    native_include,           1);
     REGISTER_SCRIPT_INTERFACE( "read_file",       native_read,           1);
     REGISTER_SCRIPT_INTERFACE("make_style", native_make_style,           5); // Graphics natives
-    REGISTER_SCRIPT_INTERFACE("draw_style", native_draw_style,           1);
+    REGISTER_SCRIPT_INTERFACE("draw_style", native_draw_style,           3);
 
 
     return true;

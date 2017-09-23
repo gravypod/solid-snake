@@ -1,12 +1,11 @@
-include("drawing.js");
-include("location.js");
-
 var game = {}; // Game Object
 var up = 87, left = 65, down = 83, right = 68; // KeyCodes end
 var ROWS = 100, COLS = 100;
 
+include("drawing.js");
+include("location.js");
 
-game.init = function () {
+game.reset = function () {
     game.keypressed = null;
 
     game.num_dots = 3;
@@ -37,6 +36,12 @@ game.init = function () {
     game.total_wait = 0;
 };
 
+game.init = function () {
+
+    init_styles();
+    game.reset();
+};
+
 game.update = function (delta) {
 
     game.total_wait += delta * 100;
@@ -57,8 +62,8 @@ game.update = function (delta) {
         var next = make_location_to(game.direction, last_dot);
 
         // Fail states
-        if (next.x < 0 || next.x > ROWS || next.y < 0 || next.y > COLS || game.dots.is_inside(next)) {
-            game.init();
+        if (next.x < 0 || next.x > (ROWS) || next.y < 0|| next.y > (COLS) || game.dots.is_inside(next)) {
+            game.reset();
             return;
         }
 
