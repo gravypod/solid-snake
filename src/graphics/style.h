@@ -28,7 +28,6 @@ __attribute__((unused)) static duk_ret_t native_draw_style(duk_context *ctx)
     const char const          *name = duk_require_string(ctx, 0);
     const float                   x = (float) duk_require_number(ctx, 1);
     const float                   y = (float) duk_require_number(ctx, 2);
-    printf("Drawing style");
     draw_style(name, x, y);
     return 0;
 }
