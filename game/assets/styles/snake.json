@@ -1,0 +1,5 @@
+{
+  "name": "snake",
+  "shader": {"vertex": "assets/shaders/shared.vert", "fragment": "assets/shaders/snake.frag"},
+  "width": 0.01, "height": 0.01
+}

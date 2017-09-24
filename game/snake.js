@@ -2,7 +2,6 @@ var game = {}; // Game Object
 var up = 87, left = 65, down = 83, right = 68; // KeyCodes end
 var ROWS = 100, COLS = 100;
 
-include("drawing.js");
 include("location.js");
 
 game.reset = function () {
@@ -37,8 +36,6 @@ game.reset = function () {
 };
 
 game.init = function () {
-
-    init_styles();
     game.reset();
 };
 
@@ -80,10 +77,18 @@ game.update = function (delta) {
 };
 
 game.render = function () {
+    var draw_type = function (type) {
+        return function (location) {
+            draw(type, location.x / ROWS, location.y / COLS);
+        }
+    };
     // Draw the snake
-    game.dots.forEach(draw_snake_dot);
+    //game.dots.forEach(draw_snake_dot);
+    game.dots.forEach(draw_type("snake"));
     if (game.food)
-        draw_food_dot(game.food)
+        draw_type("apple")(game.food);
+        //draw("apple", game.food.x / ROWS, game.food.y / COLS);
+        //draw_food_dot(game.food)
 };
 
 game.keypress = function (key, pressed) {

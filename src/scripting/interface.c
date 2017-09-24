@@ -9,6 +9,28 @@
 
 llist *imported_scripts = NULL;
 
+const char *stdlib_assets =
+    "function stdlib_assets_load_style_file(file_name) {\n"
+        "var s = JSON.parse(read_file(file_name));\n"
+        "make_style(s.name, s.width, s.height, s.shader.vertex, s.shader.fragment);\n"
+    "}\n"
+    "function draw(name, x, y) {\n"
+        "draw_style(name, x, y);\n"
+    "}\n"
+    "list_files(\"assets/styles/\").forEach(function (e, i, a) {\n"
+        "if (e.endsWith(\".json\")) {\n"
+            "print(\"ASSET-STYLE: Loading\", e);\n"
+            "stdlib_assets_load_style_file(e);\n"
+        "}\n"
+    "});\n"
+"\0";
+
+
+inline static bool eval_string(const char *buffer)
+{
+    return duk_peval_lstring_noresult(ctx, buffer, (duk_size_t) strlen(buffer)) != 0;
+}
+
 bool include_script(const char *filename)
 {
     if (llist_has(&imported_scripts, filename))
@@ -20,7 +42,7 @@ bool include_script(const char *filename)
         return false;
 
     // Load script into memory
-    if (duk_peval_lstring_noresult(ctx, (const char *) buffer, (duk_size_t) strlen(buffer)) != 0)
+    if (eval_string(buffer))
         return false;
 
     free(buffer);
@@ -40,9 +62,15 @@ bool init_interface()
     REGISTER_SCRIPT_INTERFACE(     "print",      native_print, DUK_VARARGS); // Standard natives
     REGISTER_SCRIPT_INTERFACE(   "include",    native_include,           1);
     REGISTER_SCRIPT_INTERFACE( "read_file",       native_read,           1);
+    REGISTER_SCRIPT_INTERFACE("list_files", native_list_files,           1);
     REGISTER_SCRIPT_INTERFACE("make_style", native_make_style,           5); // Graphics natives
     REGISTER_SCRIPT_INTERFACE("draw_style", native_draw_style,           3);
 
+
+    /* STANDARD LIBRARY FUNCTIONS */
+
+    if (eval_string(stdlib_assets)) // Asset loading
+        return false;
 
     return true;
 }

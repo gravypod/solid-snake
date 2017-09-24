@@ -1,0 +1,5 @@
+{
+  "name": "apple",
+  "shader": {"vertex": "assets/shaders/shared.vert", "fragment": "assets/shaders/apple.frag"},
+  "width": 0.01, "height": 0.01
+}
