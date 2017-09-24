@@ -58,6 +58,7 @@ llist* list_files(const char* folder_name, const char *ext)
         while ((ent = readdir(dir)) != NULL) {
 
             // Filter extensions
+            // TODO: Make sure this condition will actually work.
             if (ext && strcmp(ext, ent->d_name + (strlen(ent->d_name) - ext_len)) != 0) {
                 continue;
             }
