@@ -4,7 +4,7 @@ var ROWS = 100, COLS = 100;
 
 include("location.js");
 
-game.reset = function () {
+game.init = function () {
     game.keypressed = null;
 
     game.num_dots = 3;
@@ -35,10 +35,6 @@ game.reset = function () {
     game.total_wait = 0;
 };
 
-game.init = function () {
-    game.reset();
-};
-
 game.update = function (delta) {
 
     game.total_wait += delta * 100;
@@ -56,11 +52,15 @@ game.update = function (delta) {
 
     // Movement
     if (game.direction !== null) {
+        var is_off_screen = function (dot) {
+            return dot.x < 0 || dot.x > (ROWS) ||
+                   dot.y < 0 || dot.y > (COLS);
+        };
         var next = make_location_to(game.direction, last_dot);
 
         // Fail states
-        if (next.x < 0 || next.x > (ROWS) || next.y < 0|| next.y > (COLS) || game.dots.is_inside(next)) {
-            game.reset();
+        if (is_off_screen(next) || game.dots.is_inside(next)) {
+            game.init();
             return;
         }
 
@@ -73,42 +73,36 @@ game.update = function (delta) {
     while (game.dots.length > game.num_dots)
         game.dots.shift();
 
-    game.updating = false;
 };
 
 game.render = function () {
     var draw_type = function (type) {
-        return function (location) {
-            draw(type, location.x / ROWS, location.y / COLS);
-        }
+        return function (location) { draw(type, location.x / ROWS, location.y / COLS); }
     };
+    var draw_snake = draw_type("snake");
+    var draw_food  = draw_type("apple");
+
     // Draw the snake
-    //game.dots.forEach(draw_snake_dot);
-    game.dots.forEach(draw_type("snake"));
+    game.dots.forEach(draw_snake);
     if (game.food)
-        draw_type("apple")(game.food);
-        //draw("apple", game.food.x / ROWS, game.food.y / COLS);
-        //draw_food_dot(game.food)
+        draw_food(game.food);
 };
 
 game.keypress = function (key, pressed) {
 
-    if (pressed !== true)
+    // Prevent switching the snake's direction twice in the same update loop.
+    if (game.direction_changed)
         return;
 
-    // Skip directions that don't make sense
+    // Only handle when they click a key we care about (up, down, left, right).
+    if (!pressed || [up, down, left, right].indexOf(key) === -1)
+        return;
+
+    // Make sure the player doesn't move into themselves.
     var is_conflicting = function (a, b) {
         return game.direction === a && key === b || game.direction === b && key === a;
     };
-    // Make sure this direction makes sense
     if (is_conflicting(up, down) || is_conflicting(left, right))
-        return;
-    // Make sure they clicked a real button
-    if (up !== key && down !== key && left !== key && right !== key)
-        return;
-
-    // Protect against people who type too fast.
-    if (game.direction_changed)
         return;
 
     // Update the direction
