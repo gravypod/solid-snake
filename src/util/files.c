@@ -5,9 +5,7 @@
 #include "files.h"
 
 #include <sys/stat.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <dirent.h>
 
 long int fsize(const char *filename)
 {
@@ -44,4 +42,34 @@ char* read_file(const char* filename)
     fclose(f);
 
     return buffer;
+}
+
+llist* list_files(const char* folder_name, const char *ext)
+{
+    static char buff[128];
+
+    DIR *dir;
+    struct dirent *ent;
+
+    size_t ext_len = ext ? strlen(ext) : 0;
+    llist* files = NULL;
+
+    if ((dir = opendir(folder_name)) != NULL) {
+        while ((ent = readdir(dir)) != NULL) {
+
+            // Filter extensions
+            if (ext && strcmp(ext, ent->d_name + (strlen(ent->d_name) - ext_len)) != 0) {
+                continue;
+            }
+
+            memset(buff, 0, sizeof(buff));
+            strcat(buff, folder_name);
+            strcat(buff, ent->d_name);
+
+            llist_add(&files, buff, NULL, 0);
+        }
+        closedir(dir);
+    }
+
+    return files;
 }
