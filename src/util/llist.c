@@ -39,3 +39,15 @@ void llist_add(llist **head, const char const *name, const void *value, size_t s
 
     *head = next;
 }
+
+void llist_free(llist **head)
+{
+    while (*head)
+    {
+        llist *curr = *head;
+        llist *next = curr->next;
+        free(curr->name);
+        free(curr->value);
+        *head = next;
+    }
+}
