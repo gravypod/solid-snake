@@ -53,8 +53,8 @@ game.update = function (delta) {
     // Movement
     if (game.direction !== null) {
         var is_off_screen = function (dot) {
-            return dot.x < 0 || dot.x > (ROWS) ||
-                   dot.y < 0 || dot.y > (COLS);
+            return dot.x < 0 || dot.x > (ROWS - 1) ||
+                   dot.y < 0 || dot.y > (COLS - 1);
         };
         var next = make_location_to(game.direction, last_dot);
 
