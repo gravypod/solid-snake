@@ -5,7 +5,7 @@
 #ifndef ENGINE_STYLE_H
 #define ENGINE_STYLE_H
 
-#include <duktape.h>
+#include "lib/duktape/duktape.h"
 
 void make_style(const char const *name,
                 float width, float height,
