@@ -40,6 +40,7 @@ int get_texture_unit_id(const char *name)
     return -1;
 }
 
+// TODO: Test this logic
 int load_texture_unit(const char *name)
 {
     GLuint texture_id = *((GLuint *) llist_get(&textures, name));

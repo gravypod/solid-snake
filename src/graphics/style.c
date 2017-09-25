@@ -78,13 +78,14 @@ void draw_style(const char const *name, float x, float y)
             glUniform1i(texture_uniform, texture_id);
         }
 
+        // TODO: Cache this
         const GLint width  = glGetUniformLocation(s->program, "quad_width");
         const GLint height = glGetUniformLocation(s->program, "quad_height");
         if (width >= 1 && height >= 1) {
             glUniform1f(width, s->m.width);
             glUniform1f(height, s->m.height);
         }
-        // TODO: Texture
+
         draw_quadmesh(&s->m);
 
     });

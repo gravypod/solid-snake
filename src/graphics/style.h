@@ -50,6 +50,7 @@ __attribute__((unused)) static duk_ret_t native_make_style(duk_context *ctx)
 
     for (size_t i = 0; i < num_textures; i++)
     {
+        // TODO: Make sure we're actually freeing this
         free(names[i]);
         free(files[i]);
     }
