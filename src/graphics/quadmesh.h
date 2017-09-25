@@ -9,6 +9,7 @@
 
 typedef struct {
     GLuint VAO, VBO, EBO;
+    float width, height;
 } quadmesh;
 
 void make_quadmesh(quadmesh *m, float width, float height);

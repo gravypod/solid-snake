@@ -25,6 +25,7 @@ set(SOURCE_FILES
         src/util/files.c src/util/files.h
         src/graphics/quadmesh.c src/graphics/quadmesh.h
         src/graphics/shader.c src/graphics/shader.h
+        src/graphics/texture.c src/graphics/texture.h lib/stb/stb_image.h
         src/graphics/style.c src/graphics/style.h
         lib/linmath/linmath.h)
 

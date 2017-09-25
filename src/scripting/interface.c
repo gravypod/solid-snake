@@ -12,7 +12,8 @@ llist *imported_scripts = NULL;
 const char *stdlib_assets =
     "function stdlib_assets_load_style_file(file_name) {\n"
         "var s = JSON.parse(read_file(file_name));\n"
-        "make_style(s.name, s.width, s.height, s.shader.vertex, s.shader.fragment);\n"
+        "var tex = s.textures || [];"
+        "make_style(s.name, s.width, s.height, s.shader.vertex, s.shader.fragment, tex.length, tex);\n"
     "}\n"
     "function draw(name, x, y) {\n"
         "draw_style(name, x, y);\n"
@@ -63,7 +64,7 @@ bool init_interface()
     REGISTER_SCRIPT_INTERFACE(   "include",    native_include,           1);
     REGISTER_SCRIPT_INTERFACE( "read_file",       native_read,           1);
     REGISTER_SCRIPT_INTERFACE("list_files", native_list_files,           1);
-    REGISTER_SCRIPT_INTERFACE("make_style", native_make_style,           5); // Graphics natives
+    REGISTER_SCRIPT_INTERFACE("make_style", native_make_style,           7); // Graphics natives
     REGISTER_SCRIPT_INTERFACE("draw_style", native_draw_style,           3);
 
 

@@ -41,6 +41,8 @@ void make_quadmesh(quadmesh *m, float width, float height)
     m->VAO = VAO;
     m->VBO = VBO;
     m->EBO = EBO;
+    m->width = width;
+    m->height = height;
 }
 
 void draw_quadmesh(const quadmesh const *m)

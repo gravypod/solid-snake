@@ -1,0 +1,6 @@
+{
+  "name": "test",
+  "shader": {"vertex": "assets/shaders/test.vert", "fragment": "assets/shaders/test.frag"},
+  "width": 0.5, "height": 0.5,
+  "textures": [{"name": "test_texture", "file": "assets/textures/container.jpg"}]
+}
