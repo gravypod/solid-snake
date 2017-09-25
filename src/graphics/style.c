@@ -31,20 +31,24 @@ void make_style(const char const *name,
 
 void draw_style(const char const *name, float x, float y)
 {
-    static mat4x4 translation;
-    static mat4x4 move, ortho;
-    //static mat4x4 perspetcive;
-    //mat4x4_identity(translation);
-    mat4x4_ortho(ortho, 0, 1, 0, 1, 0, 1);
-    mat4x4_translate(move, x, y, 0);
-    mat4x4_mul(translation, ortho, move);
-    //mat4x4_perspective()
+    static bool has_initialized = false;
+    static mat4x4 translation, projection;
+
+    if (!has_initialized) {
+        mat4x4_ortho(projection, 0, 1, 0, 1, 0, 1);
+        has_initialized = true;
+    }
+    mat4x4_translate(translation, x, y, 0);
 
     struct style *s = llist_get(&styles, name);
     USE_SHADER(s->program, {
-        GLint translation_matrix_location = glGetUniformLocation(s->program, "translation");
+        const GLint translation_matrix_location = glGetUniformLocation(s->program, "translation");
+        const GLint  projection_matrix_location = glGetUniformLocation(s->program,  "projection");
+
         glUniformMatrix4fv(translation_matrix_location, 1, GL_FALSE, (GLfloat*) translation);
+        glUniformMatrix4fv( projection_matrix_location, 1, GL_FALSE, (GLfloat*) projection);
+
         // TODO: Texture
-       draw_quadmesh(&s->m);
+        draw_quadmesh(&s->m);
     });
 }
