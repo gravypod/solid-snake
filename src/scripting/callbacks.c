@@ -18,24 +18,24 @@ void on_key_press(GLFWwindow* window, int key, int scancode, int action, int mod
     (void) window;
     (void) scancode;
     (void) mods;
-    script.on_keypress((const unsigned char) key, action == GLFW_PRESS);
+    game.on_keypress((const unsigned char) key, action == GLFW_PRESS);
 }
 
 void on_mouse_click(GLFWwindow *window, int button, int action, int mods)
 {
     (void) window;
     (void) mods;
-    script.on_mouse_click(button, action == GLFW_PRESS);
+    game.on_mouse_click(button, action == GLFW_PRESS);
 }
 
 void on_mouse_scroll(GLFWwindow *window, double x, double y)
 {
     (void) window;
-    script.on_mouse_scroll(x, y);
+    game.on_mouse_scroll(x, y);
 }
 
 void on_mouse_move(GLFWwindow *window, double x, double y)
 {
     (void) window;
-    script.on_mouse_move(x, y);
+    game.on_mouse_move(x, y);
 }

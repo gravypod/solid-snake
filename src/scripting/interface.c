@@ -42,7 +42,7 @@ bool include_script(const char *filename)
     if (!buffer)
         return false;
 
-    // Load script into memory
+    // Load game into memory
     if (eval_string(buffer))
         return false;
 

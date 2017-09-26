@@ -14,14 +14,14 @@ void update()
     const double delta        = current_time - start;
     start = current_time;
 
-    script.update(delta);
+    game.update(delta);
 }
 
 void draw()
 {
     glClear(GL_COLOR_BUFFER_BIT);
     {
-        script.draw();
+        game.draw();
     }
     glFlush();
 }
@@ -34,12 +34,12 @@ void init()
         exit(1);
     }
 
-    // Load our script file
+    // Load our game file
     if (!include_script("snake.js")) {
         printf("Error: %s\n", duk_safe_to_string(ctx, -1));
         exit(1);
     }
-    script.init();
+    game.init();
 }
 
 

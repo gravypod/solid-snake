@@ -7,7 +7,7 @@
 
 #include "interface.h"
 
-// Call script game.update()
+// Call game game.update()
 static void s_update(const double delta)
 {
     duk_get_global_string(ctx, "game");
@@ -18,7 +18,7 @@ static void s_update(const double delta)
 
 }
 
-// Call script game.keypress()
+// Call game game.keypress()
 static void s_keypress(const unsigned char key, const bool pressed)
 {
 
@@ -30,7 +30,7 @@ static void s_keypress(const unsigned char key, const bool pressed)
     duk_pop_2(ctx);
 }
 
-// Call script game.render();
+// Call game game.render();
 static void s_draw()
 {
     duk_get_global_string(ctx, "game");
@@ -39,7 +39,7 @@ static void s_draw()
     duk_pop_2(ctx);
 }
 
-// Call script game.init()
+// Call game game.init()
 static void s_init()
 {
     duk_get_global_string(ctx, "game");
@@ -89,7 +89,7 @@ static const struct {
     void (*on_mouse_move)(const double x, const double y);
     void (*on_mouse_scroll)(const double x, const double y);
     void (*on_mouse_click)(const int button, const bool y);
-} script = {
+} game = {
     .init = &s_init,
     .update = &s_update,
     .draw = &s_draw,
