@@ -11,7 +11,7 @@ void make_style(const char const *name,
                 float width, float height,
                 const char const *vertex_name, const char const *fragment_name,
                 const size_t num_textures, const char **texture_names, const char **texture_files);
-void draw_style(const char const *name, float x, float y);
+void draw_style(const char const *name, float x, float y, float rotation);
 
 __attribute__((unused)) static duk_ret_t native_make_style(duk_context *ctx)
 {
@@ -63,7 +63,9 @@ __attribute__((unused)) static duk_ret_t native_draw_style(duk_context *ctx)
     const char const          *name = duk_require_string(ctx, 0);
     const float                   x = (float) duk_require_number(ctx, 1);
     const float                   y = (float) duk_require_number(ctx, 2);
-    draw_style(name, x, y);
+    const float            rotation = (float) duk_get_number_default(ctx, 3, 0.0f);
+
+    draw_style(name, x, y, (float) rotation);
     return 0;
 }
 

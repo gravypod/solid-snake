@@ -48,19 +48,28 @@ void make_style(const char const *name,
     llist_add(&styles, name, &s, sizeof(struct style));
 }
 
-void draw_style(const char const *name, float x, float y)
+void draw_style(const char const *name, float x, float y, float rotation)
 {
     static bool has_initialized = false;
     static mat4x4 translation, projection;
+
+    struct style *s = llist_get(&styles, name);
+
 
     if (!has_initialized) {
         mat4x4_ortho(projection, 0, 1, 0, 1, 0, 1);
         has_initialized = true;
     }
+
+    // Move to location in screen space
     mat4x4_translate(translation, x, y, 0);
 
-    struct style *s = llist_get(&styles, name);
-
+    if (rotation != 0) {
+        // Rotate around center.
+        mat4x4_translate_in_place(translation, (s->m.width / 2), (s->m.height / 2), 0);
+        mat4x4_rotate_Z(translation, translation, rotation);
+        mat4x4_translate_in_place(translation, -(s->m.width / 2), -(s->m.height / 2), 0);
+    }
 
     USE_SHADER(s->program, {
         const GLint translation_matrix_location = glGetUniformLocation(s->program, "translation");

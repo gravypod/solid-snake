@@ -15,8 +15,8 @@ const char *stdlib_assets =
         "var tex = s.textures || [];"
         "make_style(s.name, s.width, s.height, s.shader.vertex, s.shader.fragment, tex.length, tex);\n"
     "}\n"
-    "function draw(name, x, y) {\n"
-        "draw_style(name, x, y);\n"
+    "function draw(name, x, y, rotation) {\n"
+        "draw_style(name, x, y, rotation);\n"
     "}\n"
     "list_files(\"assets/styles/\").forEach(function (e, i, a) {\n"
         "if (e.endsWith(\".json\")) {\n"
@@ -65,7 +65,7 @@ bool init_interface()
     REGISTER_SCRIPT_INTERFACE( "read_file",       native_read,           1);
     REGISTER_SCRIPT_INTERFACE("list_files", native_list_files,           1);
     REGISTER_SCRIPT_INTERFACE("make_style", native_make_style,           7); // Graphics natives
-    REGISTER_SCRIPT_INTERFACE("draw_style", native_draw_style,           3);
+    REGISTER_SCRIPT_INTERFACE("draw_style", native_draw_style,           4);
 
 
     /* STANDARD LIBRARY FUNCTIONS */
