@@ -4,9 +4,6 @@
 #include "src/scripting/callbacks.h"
 #include "src/scripting/script.h"
 
-#include "src/graphics/style.h"
-
-
 #define SCREEN_W 400
 #define SCREEN_H 400
 
