@@ -27,7 +27,7 @@ set(SOURCE_FILES
         src/graphics/shader.c src/graphics/shader.h
         src/graphics/texture.c src/graphics/texture.h lib/stb/stb_image.h
         src/graphics/style.c src/graphics/style.h
-        lib/linmath/linmath.h)
+        lib/linmath/linmath.h src/scripting/callbacks.c src/scripting/callbacks.h)
 
 set(CMAKE_INCLUDE_CURRENT_DIR  ON)
 

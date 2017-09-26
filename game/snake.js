@@ -109,3 +109,7 @@ game.keypress = function (key, pressed) {
     game.direction = key;
     game.direction_changed = true;
 };
+
+game.mouse_move   = function (x, y) {};
+game.mouse_click  = function (button, pressed) {}
+game.mouse_scroll = function (change_x, change_y) {};

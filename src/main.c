@@ -1,9 +1,10 @@
 
 #include "lib/glad/glad.h"
 #include <GLFW/glfw3.h>
+#include "src/scripting/callbacks.h"
+#include "src/scripting/script.h"
 
 #include "src/graphics/style.h"
-#include "src/scripting/script.h"
 
 
 #define SCREEN_W 400
@@ -45,22 +46,6 @@ void init()
 }
 
 
-void on_screen_resize(GLFWwindow *window, int width, int height)
-{
-    (void) window;
-    glViewport(0, 0, width, height);
-}
-
-
-void on_key_press(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    (void) window;
-    (void) scancode;
-    (void) mods;
-    script.on_keypress((const unsigned char) key, action == GLFW_PRESS);
-}
-
-
 int main() {
 
 
@@ -93,9 +78,7 @@ int main() {
 
     init(); // Init our code.
 
-    glfwSetFramebufferSizeCallback(window, on_screen_resize);
-    glfwSetKeyCallback(window, on_key_press);
-
+    REGISTER_GLFW_CALLBACKS();
 
     while (!glfwWindowShouldClose(window))
     {
