@@ -4,7 +4,6 @@
 
 #include "callbacks.h"
 #include "script.h"
-#include "GL/gl.h"
 
 void on_screen_resize(GLFWwindow *window, int width, int height)
 {
