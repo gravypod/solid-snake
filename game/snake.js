@@ -1,6 +1,7 @@
 var game = {}; // Game Object
 var up = 87, left = 65, down = 83, right = 68; // KeyCodes end
-var ROWS = 100, COLS = 100;
+var MIN_ROW = 1, MAX_ROW = 99;
+var MIN_COL = 1, MAX_COL = 99;
 
 include("location.js");
 
@@ -53,8 +54,8 @@ game.update = function (delta) {
     // Movement
     if (game.direction !== null) {
         var is_off_screen = function (dot) {
-            return dot.x < 0 || dot.x > (ROWS - 1) ||
-                   dot.y < 0 || dot.y > (COLS - 1);
+            return dot.x < MIN_ROW || dot.x > (MAX_ROW - 1) ||
+                   dot.y < MIN_COL || dot.y > (MAX_COL - 1);
         };
         var next = make_location_to(game.direction, last_dot);
 
@@ -77,10 +78,17 @@ game.update = function (delta) {
 
 game.render = function () {
     var draw_type = function (type) {
-        return function (location) { draw(type, location.x / ROWS, location.y / COLS); }
+        return function (location) { draw(type, location.x / 100, location.y / 100); }
     };
     var draw_snake = draw_type("snake");
     var draw_food  = draw_type("apple");
+
+    [0, 99].forEach(function (x) {
+        for (var y = 0; y < 100; y++) {
+            draw_snake({x: x, y: y});
+            draw_snake({x: y, y: x});
+        }
+    });
 
     // Draw the snake
     game.dots.forEach(draw_snake);
@@ -90,12 +98,20 @@ game.render = function () {
 
 game.keypress = function (key, pressed) {
 
+    if (!pressed)
+        return;
+
+    if (key === 0) {
+        game.init();
+        return;
+    }
+
     // Prevent switching the snake's direction twice in the same update loop.
     if (game.direction_changed)
         return;
 
     // Only handle when they click a key we care about (up, down, left, right).
-    if (!pressed || [up, down, left, right].indexOf(key) === -1)
+    if ([up, down, left, right].indexOf(key) === -1)
         return;
 
     // Make sure the player doesn't move into themselves.
@@ -111,5 +127,5 @@ game.keypress = function (key, pressed) {
 };
 
 game.mouse_move   = function (x, y) {};
-game.mouse_click  = function (button, pressed) {}
+game.mouse_click  = function (button, pressed) {};
 game.mouse_scroll = function (change_x, change_y) {};

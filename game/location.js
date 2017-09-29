@@ -25,7 +25,7 @@ function make_location_to(direction, from_location) {
 
 function random_location() {
     return {
-        x: Math.floor(Math.random() * (ROWS)),
-        y: Math.floor(Math.random() * (COLS))
+        x: MIN_ROW + Math.floor(Math.random() * (MAX_ROW - 1)),
+        y: MIN_COL + Math.floor(Math.random() * (MAX_COL - 1))
     };
 }
