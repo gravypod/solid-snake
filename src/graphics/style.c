@@ -80,7 +80,8 @@ void draw_style(const char const *name, float x, float y, float rotation)
         mat4x4_translate_in_place(translation, -center_x, -center_y, 0);
     }
 
-    USE_SHADER(program, {
+    glUseProgram(program);
+    {
         const GLint translation_matrix_location = glGetUniformLocation(program, "translation");
         const GLint  projection_matrix_location = glGetUniformLocation(program,  "projection");
 
@@ -106,7 +107,8 @@ void draw_style(const char const *name, float x, float y, float rotation)
 
         draw_quadmesh(&m);
 
-    });
+    }
+    glUseProgram(0);
 
 
     // Cleanup our textures
