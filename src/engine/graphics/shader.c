@@ -4,7 +4,7 @@
 
 #include "shader.h"
 
-#include "src/util/files.h"
+#include "src/engine/util/files.h"
 
 shader_program make_shader(const char const *vertex_name, const char const *fragment_name)
 {

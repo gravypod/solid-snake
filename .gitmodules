@@ -1,0 +1,3 @@
+[submodule "vendor/duktape"]
+	path = vendor/duktape
+	url = git@github.com:svaarala/duktape.git
