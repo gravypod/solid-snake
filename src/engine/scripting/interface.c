@@ -3,9 +3,9 @@
 //
 
 #include "interface.h"
-#include "src/util/llist.h"
-#include "src/util/files.h"
-#include "src/graphics/style.h"
+#include "src/engine/util/llist.h"
+#include "src/engine/util/files.h"
+#include "src/engine/graphics/style.h"
 
 llist *imported_scripts = NULL;
 

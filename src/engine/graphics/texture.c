@@ -5,7 +5,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "lib/stb/stb_image.h"
 
-#include "src/util/llist.h"
+#include "src/engine/util/llist.h"
 #include "texture.h"
 
 struct texture_unit {

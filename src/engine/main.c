@@ -1,8 +1,8 @@
 
 #include "lib/glad/glad.h"
 #include <GLFW/glfw3.h>
-#include "src/scripting/callbacks.h"
-#include "src/scripting/script.h"
+#include "src/engine/scripting/callbacks.h"
+#include "src/engine/scripting/script.h"
 
 #define SCREEN_W 400
 #define SCREEN_H 400
