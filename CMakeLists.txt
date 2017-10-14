@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(engine)
 
+find_package( PythonInterp 2.7 REQUIRED )
 include(CheckCCompilerFlag)
 
 # Source: https://stackoverflow.com/a/33266748/1127064
@@ -22,7 +23,7 @@ set(VENDOR_DUKTAPE_SOURCES ${CMAKE_SOURCE_DIR}/lib/duktape/duktape.c ${CMAKE_SOU
 add_custom_command(
         OUTPUT ${VENDOR_DUKTAPE_SOURCES}
         PRE_BUILD
-        COMMAND python2 ${CMAKE_SOURCE_DIR}/vendor/duktape/tools/configure.py --output-directory ${CMAKE_SOURCE_DIR}/lib/duktape/ -DDUK_USE_FASTINT -UDUK_USE_ES6_PROXY
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/vendor/duktape/tools/configure.py --output-directory ${CMAKE_SOURCE_DIR}/lib/duktape/ -DDUK_USE_FASTINT -UDUK_USE_ES6_PROXY
 )
 add_custom_target(localduktape
         ALL
@@ -59,7 +60,7 @@ target_link_libraries(engine dl m glfw GL)
 set_property(TARGET engine PROPERTY C_STANDARD 99)
 enable_c_compiler_flag_if_supported("-Wall")
 enable_c_compiler_flag_if_supported("-Wextra")
-#enable_c_compiler_flag_if_supported("-pedantic")
+enable_c_compiler_flag_if_supported("-pedantic")
 
 # COPY SOURCE OF GAME INTO BUILD DIR
 add_custom_command(
