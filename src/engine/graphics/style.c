@@ -19,10 +19,10 @@ struct style {
     char **texture_names;
 };
 
-void make_style(const char const *name,
+void make_style(const char * const name,
                 float width, float height,
-                const char const *vertex_name, const char const *fragment_name,
-                const size_t num_textures, const char **texture_names, const char **texture_files)
+                const char * const vertex_name, const char * const fragment_name,
+                const size_t num_textures, const char * const * const texture_names, const char * const * const texture_files)
 {
     if (llist_has(&styles, name))
         return;
@@ -48,7 +48,7 @@ void make_style(const char const *name,
     llist_add(&styles, name, &s, sizeof(struct style));
 }
 
-void draw_style(const char const *name, float x, float y, float rotation)
+void draw_style(const char * const name, float x, float y, float rotation)
 {
     static bool has_initialized = false;
     static mat4x4 translation, projection;

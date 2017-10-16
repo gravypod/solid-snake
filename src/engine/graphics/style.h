@@ -7,23 +7,23 @@
 
 #include "lib/duktape/duktape.h"
 
-void make_style(const char const *name,
+void make_style(const char * const name,
                 float width, float height,
-                const char const *vertex_name, const char const *fragment_name,
-                const size_t num_textures, const char **texture_names, const char **texture_files);
-void draw_style(const char const *name, float x, float y, float rotation);
+                const char * const vertex_name, const char * const fragment_name,
+                const size_t num_textures, const char * const * const texture_names, const char * const * const texture_files);
+void draw_style(const char * const name, float x, float y, float rotation);
 
 __attribute__((unused)) static duk_ret_t native_make_style(duk_context *ctx)
 {
     // Can't have more then 32 textures in a single style
     static char *(names[32]), *(files[32]);
 
-    const char const          *name = duk_require_string(ctx, 0);
-    const float               width = (float) duk_require_number(ctx, 1);
-    const float              height = (float) duk_require_number(ctx, 2);
-    const char const   *vertex_name = duk_require_string(ctx, 3);
-    const char const *fragment_name = duk_require_string(ctx, 4);
-    const size_t       num_textures = (size_t) duk_require_number(ctx, 5);
+    const char  * const         name = duk_require_string(ctx, 0);
+    const float                width = (float) duk_require_number(ctx, 1);
+    const float               height = (float) duk_require_number(ctx, 2);
+    const char * const   vertex_name = duk_require_string(ctx, 3);
+    const char * const fragment_name = duk_require_string(ctx, 4);
+    const size_t        num_textures = (size_t) duk_require_number(ctx, 5);
 
     if (num_textures)
     {
@@ -46,7 +46,7 @@ __attribute__((unused)) static duk_ret_t native_make_style(duk_context *ctx)
     make_style(name,
                width, height,
                vertex_name, fragment_name,
-               num_textures, (const char **) names, (const char **) files);
+               num_textures, (const char * const * const) names, (const char * const * const) files);
 
     for (size_t i = 0; i < num_textures; i++)
     {
@@ -60,12 +60,12 @@ __attribute__((unused)) static duk_ret_t native_make_style(duk_context *ctx)
 
 __attribute__((unused)) static duk_ret_t native_draw_style(duk_context *ctx)
 {
-    const char const          *name = duk_require_string(ctx, 0);
+    const char * const         name = duk_require_string(ctx, 0);
     const float                   x = (float) duk_require_number(ctx, 1);
     const float                   y = (float) duk_require_number(ctx, 2);
     const float            rotation = (float) duk_get_number_default(ctx, 3, 0.0f);
 
-    draw_style(name, x, y, (float) rotation);
+    draw_style(name, x, y, rotation);
     return 0;
 }
 

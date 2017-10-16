@@ -15,9 +15,9 @@ struct llist_t {
 };
 typedef struct llist_t llist;
 
-void *llist_get(llist **head, const char const *name);
-bool llist_has(llist **head, const char const *name);
-void llist_add(llist **head, const char const *name, const void *value, size_t size);
+void *llist_get(llist **head, const char * const name);
+bool llist_has(llist **head, const char * const name);
+void llist_add(llist **head, const char * const name, const void * const value, size_t size);
 void llist_free(llist **head);
 
 #endif //ENGINE_LLIST_H

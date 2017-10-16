@@ -45,7 +45,7 @@ void make_quadmesh(quadmesh *m, float width, float height)
     m->height = height;
 }
 
-void draw_quadmesh(const quadmesh const *m)
+void draw_quadmesh(const quadmesh * const m)
 {
     glBindVertexArray(m->VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
