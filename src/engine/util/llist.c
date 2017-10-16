@@ -7,7 +7,7 @@
 #include <string.h>
 #include <malloc.h>
 
-void *llist_get(llist **head, const char const *name)
+void *llist_get(llist **head, const char * const name)
 {
     llist const * tmp = *head;
     while (tmp)
@@ -19,12 +19,12 @@ void *llist_get(llist **head, const char const *name)
     return NULL;
 }
 
-bool llist_has(llist **head, const char const *name)
+bool llist_has(llist **head, const char * const name)
 {
     return llist_get(head, name) != NULL;
 }
 
-void llist_add(llist **head, const char const *name, const void *value, size_t size)
+void llist_add(llist **head, const char * const name, const void * const value, size_t size)
 {
     // Allocate
     llist *next = malloc(sizeof(llist));

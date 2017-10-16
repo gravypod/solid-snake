@@ -9,6 +9,6 @@
 
 typedef GLuint shader_program;
 
-shader_program make_shader(const char const *vertex_name, const char const *fragment_name);
+shader_program make_shader(const char * const vertex_name, const char * const fragment_name);
 
 #endif //ENGINE_SHADER_H

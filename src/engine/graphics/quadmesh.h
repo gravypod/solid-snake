@@ -13,6 +13,6 @@ typedef struct {
 } quadmesh;
 
 void make_quadmesh(quadmesh *m, float width, float height);
-void draw_quadmesh(const quadmesh const *m);
+void draw_quadmesh(const quadmesh * const m);
 
 #endif //ENGINE_QUADMESH_H

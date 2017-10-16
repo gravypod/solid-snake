@@ -6,7 +6,7 @@
 
 #include "src/engine/util/files.h"
 
-shader_program make_shader(const char const *vertex_name, const char const *fragment_name)
+shader_program make_shader(const char * const vertex_name, const char * const fragment_name)
 {
     static char compile_message[1024];
     static int success;
