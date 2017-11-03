@@ -29,10 +29,24 @@ add_custom_target(localduktape
         ALL
         DEPENDS ${VENDOR_DUKTAPE_SOURCES})
 
+set(VENDOR_GLAD_SOURCES ${CMAKE_SOURCE_DIR}/lib/glad/glad.c ${CMAKE_SOURCE_DIR}/lib/glad/glad.h)
+add_custom_command(
+	OUTPUT ${VENDOR_GLAD_SOURCES}
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vendor/glad/
+	PRE_BUILD
+	COMMAND ${PYTHON_EXECUTABLE} -m glad --generator c --out-path ${CMAKE_SOURCE_DIR}/lib/glad/ --spec gl --omit-khrplatform --local-files
+)
+add_custom_target(localglad
+	ALL
+	DEPENDS ${VENDOR_GLAD_SOURCES})
+
+
+#        lib/glad/glad.c
+#	lib/duktape/duktape.c lib/duktape/duktape.h lib/duktape/duk_config.h
+
 # ALL SOURCES
 set(SOURCE_FILES
-        lib/glad/glad.c
-        lib/duktape/duktape.c lib/duktape/duktape.h lib/duktape/duk_config.h
+	${VENDOR_GLAD_SOURCES} ${VENDOR_DUKTAPE_SOURCES}
         src/engine/main.c
         src/engine/scripting/interface.c src/engine/scripting/interface.h
         src/engine/scripting/script.h
@@ -51,7 +65,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR  ON)
 add_executable(engine ${SOURCE_FILES})
 
 # VENDOR DUKTAPE
-add_dependencies(engine localduktape)
+add_dependencies(engine localduktape localglad)
 
 # GL, GLFW, DL, M
 target_link_libraries(engine dl m glfw GL)
