@@ -1,3 +1,7 @@
 [submodule "vendor/duktape"]
 	path = vendor/duktape
 	url = git@github.com:svaarala/duktape.git
+[submodule "vendor/glad"]
+	path = vendor/glad
+	url = git@github.com:Dav1dde/glad.git
+	branch = master
