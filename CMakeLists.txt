@@ -56,7 +56,7 @@ set(SOURCE_FILES
         src/engine/graphics/shader.c src/engine/graphics/shader.h
         src/engine/graphics/texture.c src/engine/graphics/texture.h lib/stb/stb_image.h
         src/engine/graphics/style.c src/engine/graphics/style.h
-        lib/linmath/linmath.h src/engine/scripting/callbacks.c src/engine/scripting/callbacks.h src/engine/graphics/screen.c src/engine/graphics/screen.h)
+        lib/linmath/linmath.h src/engine/scripting/callbacks.c src/engine/scripting/callbacks.h src/engine/graphics/screen.c src/engine/graphics/screen.h src/engine/graphics/vulkan.c src/engine/graphics/vulkan.h)
 
 set(CMAKE_INCLUDE_CURRENT_DIR  ON)
 
