@@ -1,4 +1,6 @@
 
+#define GLFW_INCLUDE_VULKAN
+
 #include "lib/glad/glad.h"
 #include <GLFW/glfw3.h>
 #include "src/engine/scripting/callbacks.h"

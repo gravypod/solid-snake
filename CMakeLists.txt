@@ -68,7 +68,7 @@ add_executable(engine ${SOURCE_FILES})
 add_dependencies(engine localduktape localglad)
 
 # GL, GLFW, DL, M
-target_link_libraries(engine dl m glfw GL)
+target_link_libraries(engine dl m glfw GL vulkan)
 
 # STANDARDS
 set_property(TARGET engine PROPERTY C_STANDARD 99)
