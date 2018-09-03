@@ -18,6 +18,10 @@ typedef struct {
     uint32_t num_layer_properties;
 
     VkInstance instance;
+    VkDebugUtilsMessengerEXT debug_utils_messenger_callback;
+
+    const char ** required_extensions;
+    uint32_t num_required_extensions;
 } vulkan_state;
 
 
