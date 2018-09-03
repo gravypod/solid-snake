@@ -7,7 +7,9 @@
 #include "wrappers/vulkan_debugging.h"
 
 glfw_state glfw;
-vulkan_state vulkan;
+vulkan_state vulkan = {
+        .physicalDevice = VK_NULL_HANDLE
+};
 
 /*
  * Provide vulkan with some context for our application
@@ -105,9 +107,6 @@ VkResult create_vulkan_application_interface() {
     return vkCreateInstance(&creation_request, NULL, &vulkan.instance);
 }
 
-void init_glfw() {
-    glfw.extensions = glfwGetRequiredInstanceExtensions(&glfw.num_extensions);
-}
 
 void init_list_of_required_extensions() {
     vulkan.num_required_extensions = glfw.num_extensions + 1;
@@ -116,6 +115,46 @@ void init_list_of_required_extensions() {
         vulkan.required_extensions[i] = glfw.extensions[i];
     }
     vulkan.required_extensions[vulkan.num_required_extensions - 1] = VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
+}
+
+
+bool is_suitable_physical_device(VkPhysicalDevice device) {
+    VkPhysicalDeviceProperties properties;
+    VkPhysicalDeviceFeatures features;
+    vkGetPhysicalDeviceProperties(device, &properties);
+    vkGetPhysicalDeviceFeatures(device, &features);
+
+    return properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && features.geometryShader;
+}
+
+bool pick_physical_device() {
+    uint32_t num_devices = 0;
+    if (vkEnumeratePhysicalDevices(vulkan.instance, &num_devices, NULL) != VK_SUCCESS) {
+        return false;
+    }
+
+    VkPhysicalDevice *devices = malloc(sizeof(VkPhysicalDevice) * num_devices);
+    if (vkEnumeratePhysicalDevices(vulkan.instance, &num_devices, devices) != VK_SUCCESS) {
+        free(devices);
+        return false;
+    }
+
+    bool found = false;
+    for (uint32_t i = 0; i < num_devices; i++) {
+        if (is_suitable_physical_device(devices[i])) {
+            vulkan.physicalDevice = devices[i];
+            found = true;
+            break;
+        }
+    }
+
+    free(devices);
+
+    return found;
+}
+
+void init_glfw() {
+    glfw.extensions = glfwGetRequiredInstanceExtensions(&glfw.num_extensions);
 }
 
 bool init_vulkan() {
@@ -146,6 +185,11 @@ bool init_vulkan() {
     }
 
     init_debug_callback();
+
+    if (!pick_physical_device()) {
+        printf("Failed to pick a suitable graphics device\n");
+        return false;
+    }
 
     printf("Vulkan Initialized\n");
     printf("Loaded Vulkan Extensions: %u\n", vulkan.num_properties);

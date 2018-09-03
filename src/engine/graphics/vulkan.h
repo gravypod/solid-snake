@@ -22,6 +22,8 @@ typedef struct {
 
     const char ** required_extensions;
     uint32_t num_required_extensions;
+
+    VkPhysicalDevice physicalDevice;
 } vulkan_state;
 
 
