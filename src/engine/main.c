@@ -84,6 +84,8 @@ int main() {
         glfwPollEvents();
     }
 
+    cleanup_vulkan();
+
     glfwDestroyWindow(window);
 
     glfwTerminate();

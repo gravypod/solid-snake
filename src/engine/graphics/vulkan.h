@@ -14,6 +14,9 @@ typedef struct {
     VkExtensionProperties *properties;
     uint32_t num_properties;
 
+    VkLayerProperties *layer_properties;
+    uint32_t num_layer_properties;
+
     VkInstance instance;
 } vulkan_state;
 
@@ -23,5 +26,7 @@ typedef struct {
  * @return
  */
 bool init_vulkan();
+
+void cleanup_vulkan();
 
 #endif
