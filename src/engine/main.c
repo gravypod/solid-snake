@@ -3,7 +3,7 @@
 
 #include "lib/glad/glad.h"
 #include <GLFW/glfw3.h>
-#include "src/engine/graphics/vulkan.h"
+#include <src/engine/graphics/vulkan/vulkan.h>
 #include "src/engine/scripting/callbacks.h"
 #include "src/engine/scripting/script.h"
 
@@ -66,7 +66,7 @@ int main() {
     glfwMakeContextCurrent(window);
 
 
-    if (!init_vulkan()) {
+    if (!vulkan_init()) {
         printf("Failed to initialize graphics layer\n");
         return 1;
     }
@@ -84,7 +84,6 @@ int main() {
         glfwPollEvents();
     }
 
-    cleanup_vulkan();
 
     glfwDestroyWindow(window);
 

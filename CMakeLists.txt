@@ -59,7 +59,7 @@ set(SOURCE_FILES
         lib/linmath/linmath.h
         src/engine/scripting/callbacks.c src/engine/scripting/callbacks.h
         src/engine/graphics/screen.c src/engine/graphics/screen.h
-        src/engine/graphics/vulkan.c src/engine/graphics/vulkan.h src/engine/graphics/wrappers/vulkan_debugging.h)
+        src/engine/graphics/wrappers/vulkan_debugging.h src/engine/graphics/vulkan/vulkan.c src/engine/graphics/vulkan/vulkan.h src/engine/graphics/vulkan/wrappers.h src/engine/graphics/vulkan/query.c src/engine/graphics/vulkan/query.h src/engine/graphics/vulkan/debug.c src/engine/graphics/vulkan/debug.h src/engine/graphics/vulkan/config.c src/engine/graphics/vulkan/config.h)
 
 set(CMAKE_INCLUDE_CURRENT_DIR  ON)
 
