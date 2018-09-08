@@ -1,9 +1,9 @@
 
-#define GLFW_INCLUDE_VULKAN
 
 #include "lib/glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <src/engine/graphics/vulkan/vulkan.h>
+#include <src/engine/graphics/vulkan/window.h>
 #include "src/engine/scripting/callbacks.h"
 #include "src/engine/scripting/script.h"
 
@@ -46,26 +46,6 @@ void init() {
 
 
 int main() {
-
-
-    glfwInit();
-
-    // Disable loading OpenGL and use GLFW for loading APIs
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-
-    GLFWwindow *window = glfwCreateWindow(SCREEN_W, SCREEN_H, "Solid Engine", NULL, NULL);
-
-    if (!window) {
-        printf("Failed to create window!\n");
-        glfwTerminate();
-        return 1;
-    }
-
-
-    glfwMakeContextCurrent(window);
-
-
     if (!vulkan_init()) {
         printf("Failed to initialize graphics layer\n");
         return 1;
@@ -76,18 +56,15 @@ int main() {
     //REGISTER_GLFW_CALLBACKS();
 
 
-    while (!glfwWindowShouldClose(window)) {
+    while (!vulkan_window_is_close_requested()) {
         //update();
         //draw();
 
         //glfwSwapBuffers(window);
-        glfwPollEvents();
+        vulkan_update();
     }
 
-
-    glfwDestroyWindow(window);
-
-    glfwTerminate();
+    vulkan_cleanup();
 
     return 0;
 }

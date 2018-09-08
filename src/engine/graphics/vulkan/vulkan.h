@@ -1,12 +1,16 @@
 #ifndef ENGINE_VGMODULE_H
 #define ENGINE_VGMODULE_H
 
+#define GLFW_INCLUDE_VULKAN 1
+
+#include <GLFW/glfw3.h>
 #include <stdbool.h>
 #include <vulkan/vulkan.h>
 
 typedef struct {
     uint32_t num_extensions;
     const char **extensions;
+    GLFWwindow *window;
 } glfw;
 
 
@@ -49,7 +53,9 @@ typedef struct {
     VkQueueFamilyProperties *properties;
 
     uint32_t main_rendering_queue_id;
+    uint32_t main_presentation_queue_id;
     VkQueue rendering;
+    VkQueue presenting;
 } vulkan_queues;
 
 typedef struct {
@@ -64,6 +70,7 @@ typedef struct {
 
     glfw g;
     VkInstance instance;
+    VkSurfaceKHR surface;
 
     vulkan_layers layers;
     vulkan_extensions extensions;
@@ -76,6 +83,7 @@ typedef struct {
 
 
 bool vulkan_init();
-
+void vulkan_update();
+void vulkan_cleanup();
 
 #endif

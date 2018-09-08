@@ -7,6 +7,8 @@
 #include "config.h"
 #include "debug.h"
 #include "queues.h"
+#include "window.h"
+#include "surface.h"
 
 vulkan v = {
         .definition =  {
@@ -54,6 +56,12 @@ void vulkan_info_print() {
 
 
 bool vulkan_init() {
+
+    if (!vulkan_window_init(&v)) {
+        printf("Failed to create window!\n");
+        return false;
+    }
+
     // Find hardware info
     if (!vulkan_hardware_query(&v)) {
         printf("Failed to query vulkan hardware!\n");
@@ -78,6 +86,12 @@ bool vulkan_init() {
         return false;
     }
 
+    // Make drawable surface
+    if (!vulkan_surface_init(&v)) {
+        printf("Failed to create drawing surface\n");
+        return false;
+    }
+
     // Find a queue with graphics pipeline support
     if (!vulkan_queues_init(&v)) {
         printf("Could not find graphics bit in chosen device!\n");
@@ -88,4 +102,13 @@ bool vulkan_init() {
     vulkan_info_print();
 
     return true;
+}
+
+
+void vulkan_update() {
+    vulkan_window_update();
+}
+
+void vulkan_cleanup() {
+    vulkan_window_cleanup();
 }
