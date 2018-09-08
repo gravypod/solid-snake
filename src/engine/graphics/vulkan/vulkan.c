@@ -9,6 +9,7 @@
 #include "queues.h"
 #include "window.h"
 #include "surface.h"
+#include "swapchain.h"
 
 vulkan v = {
         .definition =  {
@@ -95,6 +96,10 @@ bool vulkan_init() {
     // Find a queue with graphics pipeline support
     if (!vulkan_queues_init(&v)) {
         printf("Could not find graphics bit in chosen device!\n");
+        return false;
+    }
+
+    if (!vulkan_swapchain_init(&v)) {
         return false;
     }
 

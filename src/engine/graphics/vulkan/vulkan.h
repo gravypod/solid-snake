@@ -52,6 +52,9 @@ typedef struct {
     uint32_t num_properties;
     VkQueueFamilyProperties *properties;
 
+    uint32_t  num_queue_families;
+    uint32_t queue_families[2];
+
     uint32_t main_rendering_queue_id;
     uint32_t main_presentation_queue_id;
     VkQueue rendering;
@@ -61,9 +64,22 @@ typedef struct {
 typedef struct {
     uint32_t num_extensions;
     const char **extensions;
+    uint32_t num_logical_extensions;
+    const char **logical_extensions;
     uint32_t num_layers;
     const char **layers;
 } vulkan_required_configuration;
+
+typedef struct {
+    VkSwapchainKHR swapchain;
+    VkSurfaceCapabilitiesKHR capabilities;
+
+    VkSurfaceFormatKHR *formats;
+    uint32_t num_formats;
+
+    VkPresentModeKHR  *modes;
+    uint32_t num_modes;
+} vulkan_swapchain;
 
 typedef struct {
     VkApplicationInfo definition;
@@ -77,6 +93,7 @@ typedef struct {
     vulkan_debugging debugging;
     vulkan_devices devices;
     vulkan_queues queues;
+    vulkan_swapchain swapchain;
 
     vulkan_required_configuration required_configuration;
 } vulkan;

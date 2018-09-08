@@ -3,12 +3,32 @@
 #include "vulkan.h"
 #include "debug.h"
 
+#define NUM_LOGICAL_EXTENSIONS 1
+const char *logical_extensions[NUM_LOGICAL_EXTENSIONS] = {
+        VK_KHR_SWAPCHAIN_EXTENSION_NAME
+};
+
 
 bool vulkan_config_physical_device_is_suitable(VkPhysicalDevice device) {
+    static char *extensions = NULL;
+    static uint32_t num_extensions = 0;
+    static uint32_t current_num_extensions = 0;
+
     VkPhysicalDeviceProperties properties;
     VkPhysicalDeviceFeatures features;
     vkGetPhysicalDeviceProperties(device, &properties);
     vkGetPhysicalDeviceFeatures(device, &features);
+
+//    vkEnumerateDeviceExtensionProperties(device, NULL, &current_num_extensions, NULL);
+//
+//    if (extensions) {
+//        if (current_num_extensions > num_extensions) {
+//
+//        }
+//    } else {
+//        extensions = malloc(sizeof(char*) * current_num_extensions);
+//        num_extensions = current_num_extensions;
+//    }
 
     return properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && features.geometryShader;
 }
@@ -33,8 +53,7 @@ VkPhysicalDevice vulkan_config_pick_physical_device(vulkan *v) {
 }
 
 
-bool vulkan_config_init(vulkan *v)
-{
+bool vulkan_config_init(vulkan *v) {
     // Request all GLFW extensions to be loaded up
     v->required_configuration.num_extensions = v->g.num_extensions + 1;
     v->required_configuration.extensions = malloc(sizeof(char *) * v->required_configuration.num_extensions);
@@ -48,5 +67,10 @@ bool vulkan_config_init(vulkan *v)
     // request all validation layers
     v->required_configuration.num_layers = vulkan_debug_num_validation_layers();
     v->required_configuration.layers = vulkan_debug_validation_layers();
+
+
+    v->required_configuration.num_logical_extensions = NUM_LOGICAL_EXTENSIONS;
+    v->required_configuration.logical_extensions = logical_extensions;
+
     return true;
 }

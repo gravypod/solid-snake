@@ -30,12 +30,17 @@ vulkan_queues_selection_filter_is_graphics_queue(vulkan *v, VkPhysicalDevice dev
 VkResult vulkan_queues_init_queue_family(vulkan *v, VkPhysicalDevice device, float priority) {
 
 
-    uint32_t num_queue_creations = 2;
+    v->queues.num_queue_families = 2;
 
     // We don't need to double create the same queue.
     // TODO: Hack. Make this handle a dynamic number of queues
     if (v->queues.main_presentation_queue_id == v->queues.main_rendering_queue_id) {
-        num_queue_creations = 1;
+        v->queues.num_queue_families = 1;
+        v->queues.queue_families[0] = v->queues.main_presentation_queue_id;
+    } else {
+        v->queues.num_queue_families = 2;
+        v->queues.queue_families[0] = v->queues.main_presentation_queue_id;
+        v->queues.queue_families[1] = v->queues.main_rendering_queue_id;
     }
 
     VkDeviceQueueCreateInfo queue_creations[] = {
@@ -59,16 +64,18 @@ VkResult vulkan_queues_init_queue_family(vulkan *v, VkPhysicalDevice device, flo
     VkDeviceCreateInfo request = {
             .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
             .pQueueCreateInfos = queue_creations,
-            .queueCreateInfoCount = num_queue_creations,
+            .queueCreateInfoCount = v->queues.num_queue_families,
             .pEnabledFeatures = &device_features,
 
-            // No device extensions enabled for now. We will enable swapchain later
-            .enabledExtensionCount = 0,
+            // Device extensions
+            .enabledExtensionCount = v->required_configuration.num_logical_extensions,
+            .ppEnabledExtensionNames = v->required_configuration.logical_extensions,
 
             // Validation Layers
             .enabledLayerCount = v->required_configuration.num_layers,
             .ppEnabledLayerNames = v->required_configuration.layers
     };
+
 
     return vkCreateDevice(device, &request, NULL, &v->devices.logical_device);
 }

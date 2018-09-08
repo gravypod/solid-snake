@@ -63,7 +63,7 @@ set(SOURCE_FILES
         src/engine/graphics/vulkan/wrappers.h
         src/engine/graphics/vulkan/query.c src/engine/graphics/vulkan/query.h
         src/engine/graphics/vulkan/debug.c src/engine/graphics/vulkan/debug.h
-        src/engine/graphics/vulkan/config.c src/engine/graphics/vulkan/config.h src/engine/graphics/vulkan/queues.c src/engine/graphics/vulkan/queues.h src/engine/graphics/vulkan/surface.c src/engine/graphics/vulkan/surface.h src/engine/graphics/vulkan/window.c src/engine/graphics/vulkan/window.h)
+        src/engine/graphics/vulkan/config.c src/engine/graphics/vulkan/config.h src/engine/graphics/vulkan/queues.c src/engine/graphics/vulkan/queues.h src/engine/graphics/vulkan/surface.c src/engine/graphics/vulkan/surface.h src/engine/graphics/vulkan/window.c src/engine/graphics/vulkan/window.h src/engine/graphics/vulkan/swapchain.c src/engine/graphics/vulkan/swapchain.h)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
