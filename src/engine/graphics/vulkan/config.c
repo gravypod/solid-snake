@@ -10,25 +10,10 @@ const char *logical_extensions[NUM_LOGICAL_EXTENSIONS] = {
 
 
 bool vulkan_config_physical_device_is_suitable(VkPhysicalDevice device) {
-    static char *extensions = NULL;
-    static uint32_t num_extensions = 0;
-    static uint32_t current_num_extensions = 0;
-
     VkPhysicalDeviceProperties properties;
     VkPhysicalDeviceFeatures features;
     vkGetPhysicalDeviceProperties(device, &properties);
     vkGetPhysicalDeviceFeatures(device, &features);
-
-//    vkEnumerateDeviceExtensionProperties(device, NULL, &current_num_extensions, NULL);
-//
-//    if (extensions) {
-//        if (current_num_extensions > num_extensions) {
-//
-//        }
-//    } else {
-//        extensions = malloc(sizeof(char*) * current_num_extensions);
-//        num_extensions = current_num_extensions;
-//    }
 
     return properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && features.geometryShader;
 }

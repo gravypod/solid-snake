@@ -81,14 +81,16 @@ uint32_t vulkan_swapchain_choose_image_count(vulkan *v) {
 }
 
 VkResult vulkan_swapchain_create(vulkan *v) {
-    VkSurfaceFormatKHR format = vulkan_swapchain_select_format(v);
+    v->swapchain.format = vulkan_swapchain_select_format(v);
+    v->swapchain.extent = vulkan_swapchain_choose_extent(v);
+
     VkSwapchainCreateInfoKHR request = {
             .sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
             .surface = v->surface,
             .minImageCount = vulkan_swapchain_choose_image_count(v),
-            .imageFormat = format.format,
-            .imageColorSpace = format.colorSpace,
-            .imageExtent = vulkan_swapchain_choose_extent(v),
+            .imageFormat = v->swapchain.format.format,
+            .imageColorSpace = v->swapchain.format.colorSpace,
+            .imageExtent = v->swapchain.extent,
             .imageArrayLayers = 1,
             .imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
 
@@ -114,6 +116,44 @@ VkResult vulkan_swapchain_create(vulkan *v) {
     return vkCreateSwapchainKHR(v->devices.logical_device, &request, NULL, &v->swapchain.swapchain);
 }
 
+VkResult vulkan_swapchan_get_images(vulkan *v) {
+
+    vkGetSwapchainImagesKHR(v->devices.logical_device, v->swapchain.swapchain, &v->swapchain.num_images, NULL);
+    v->swapchain.images = malloc(sizeof(VkImage) * v->swapchain.num_images);
+    return vkGetSwapchainImagesKHR(v->devices.logical_device, v->swapchain.swapchain, &v->swapchain.num_images,
+                                   v->swapchain.images);
+}
+
+bool vulkan_swapchain_make_image_views(vulkan *v) {
+    v->swapchain.image_views = malloc(sizeof(VkImageView) * v->swapchain.num_images);
+    for (uint32_t i = 0; i < v->swapchain.num_images; i++) {
+        VkImageViewCreateInfo request = {
+                .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+                .image = v->swapchain.images[i],
+                .viewType = VK_IMAGE_VIEW_TYPE_2D,
+                .format = v->swapchain.format.format,
+                .components = {
+                        .r = VK_COMPONENT_SWIZZLE_IDENTITY,
+                        .g = VK_COMPONENT_SWIZZLE_IDENTITY,
+                        .b = VK_COMPONENT_SWIZZLE_IDENTITY,
+                        .a = VK_COMPONENT_SWIZZLE_IDENTITY,
+                },
+                .subresourceRange = {
+                        .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+                        .baseMipLevel = 0,
+                        .levelCount = 1,
+                        .baseArrayLayer = 0,
+                        .layerCount = 1
+                }
+        };
+
+        if (vkCreateImageView(v->devices.logical_device, &request, NULL, &v->swapchain.image_views[i]) != VK_SUCCESS) {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool vulkan_swapchain_init(vulkan *v) {
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR(v->devices.selected_device, v->surface, &v->swapchain.capabilities);
     vkGetPhysicalDeviceSurfaceFormatsKHR(v->devices.selected_device, v->surface, &v->swapchain.num_formats, NULL);
@@ -135,6 +175,16 @@ bool vulkan_swapchain_init(vulkan *v) {
 
     if (vulkan_swapchain_create(v) != VK_SUCCESS) {
         printf("Failed to create swapchain instance from configuration\n");
+        return false;
+    }
+
+    if (vulkan_swapchan_get_images(v) != VK_SUCCESS) {
+        printf("Failed to load images out of swapchain\n");
+        return false;
+    }
+
+    if (!vulkan_swapchain_make_image_views(v)) {
+        printf("Failed to make image views\n");
         return false;
     }
 

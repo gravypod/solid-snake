@@ -71,7 +71,14 @@ typedef struct {
 } vulkan_required_configuration;
 
 typedef struct {
+    VkSurfaceFormatKHR format;
+    VkExtent2D extent;
     VkSwapchainKHR swapchain;
+
+    VkImage *images;
+    VkImageView *image_views;
+    uint32_t num_images;
+
     VkSurfaceCapabilitiesKHR capabilities;
 
     VkSurfaceFormatKHR *formats;
