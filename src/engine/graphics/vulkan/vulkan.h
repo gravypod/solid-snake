@@ -27,6 +27,7 @@ typedef struct {
      * The device we are currently rendering to
      */
     VkPhysicalDevice selected_device;
+    VkDevice  logical_device;
 } vulkan_devices;
 
 typedef struct {
@@ -41,6 +42,15 @@ typedef struct {
     const char **layers;
     uint32_t num_layers;
 } vulkan_layers;
+
+
+typedef struct {
+    uint32_t num_properties;
+    VkQueueFamilyProperties *properties;
+
+    uint32_t main_rendering_queue_id;
+    VkQueue rendering;
+} vulkan_queues;
 
 typedef struct {
     uint32_t num_extensions;
@@ -59,6 +69,7 @@ typedef struct {
     vulkan_extensions extensions;
     vulkan_debugging debugging;
     vulkan_devices devices;
+    vulkan_queues queues;
 
     vulkan_required_configuration required_configuration;
 } vulkan;

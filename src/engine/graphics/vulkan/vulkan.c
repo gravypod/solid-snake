@@ -6,6 +6,7 @@
 #include "vulkan.h"
 #include "config.h"
 #include "debug.h"
+#include "queues.h"
 
 vulkan v = {
         .definition =  {
@@ -47,6 +48,8 @@ void vulkan_info_print() {
     for (uint32_t i = 0; i < v.layers.num_properties; i++) {
         printf("\t%d - %s (%d)\n", i, v.layers.properties[i].layerName, v.layers.properties[i].specVersion);
     }
+
+    printf("Using %u as the main graphics queue\n", v.queues.main_rendering_queue_id);
 }
 
 
@@ -72,6 +75,12 @@ bool vulkan_init() {
     // Select a device
     if ((v.devices.selected_device = vulkan_config_pick_physical_device(&v)) == VK_NULL_HANDLE) {
         printf("Failed to find suitable device!\n");
+        return false;
+    }
+
+    // Find a queue with graphics pipeline support
+    if (!vulkan_queues_init(&v)) {
+        printf("Could not find graphics bit in chosen device!\n");
         return false;
     }
 
