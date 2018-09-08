@@ -6,17 +6,17 @@
 	url = git@github.com:Dav1dde/glad.git
 	branch = master
 [submodule "tools/shaderc"]
-	path = tools/shaderc
+	path = lib/shaderc
 	url = git@github.com:google/shaderc.git
 [submodule "tools/googletest"]
-	path = tools/googletest
+	path = lib/googletest
 	url = git@github.com:google/googletest.git
 [submodule "tools/glslang"]
-	path = tools/glslang
+	path = lib/glslang
 	url = git@github.com:google/glslang.git
 [submodule "tools/spirv-tools"]
-	path = tools/spirv-tools
+	path = lib/spirv-tools
 	url = git@github.com:KhronosGroup/SPIRV-Tools.git
 [submodule "tools/spirv-headers"]
-	path = tools/spirv-headers
+	path = lib/spirv-headers
 	url = git@github.com:KhronosGroup/SPIRV-Headers.git

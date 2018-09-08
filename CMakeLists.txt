@@ -20,16 +20,16 @@ endfunction()
 
 # Build shaderc library for compiling glsl shaders
 set(SHADERC_SYMLINKS
-        ${CMAKE_SOURCE_DIR}/tools/shaderc/third_party/glslang
-        ${CMAKE_SOURCE_DIR}/tools/shaderc/third_party/googletest
-        ${CMAKE_SOURCE_DIR}/tools/shaderc/third_party/spirv-headers
-        ${CMAKE_SOURCE_DIR}/tools/shaderc/third_party/spirv-tools)
+        ${CMAKE_SOURCE_DIR}/lib/shaderc/third_party/glslang
+        ${CMAKE_SOURCE_DIR}/lib/shaderc/third_party/googletest
+        ${CMAKE_SOURCE_DIR}/lib/shaderc/third_party/spirv-headers
+        ${CMAKE_SOURCE_DIR}/lib/shaderc/third_party/spirv-tools)
 add_custom_command(
         OUTPUT ${SHADERC_SYMLINKS}
-        COMMAND ln -s ${CMAKE_SOURCE_DIR}/tools/glslang ${CMAKE_SOURCE_DIR}/tools/shaderc/third_party/glslang
-        COMMAND ln -s ${CMAKE_SOURCE_DIR}/tools/googletest ${CMAKE_SOURCE_DIR}/tools/shaderc/third_party/googletest
-        COMMAND ln -s ${CMAKE_SOURCE_DIR}/tools/spirv-headers ${CMAKE_SOURCE_DIR}/tools/shaderc/third_party/spirv-headers
-        COMMAND ln -s ${CMAKE_SOURCE_DIR}/tools/spirv-tools ${CMAKE_SOURCE_DIR}/tools/shaderc/third_party/spirv-tools
+        COMMAND ln -s ${CMAKE_SOURCE_DIR}/lib/glslang ${CMAKE_SOURCE_DIR}/lib/shaderc/third_party/glslang
+        COMMAND ln -s ${CMAKE_SOURCE_DIR}/lib/googletest ${CMAKE_SOURCE_DIR}/lib/shaderc/third_party/googletest
+        COMMAND ln -s ${CMAKE_SOURCE_DIR}/lib/spirv-headers ${CMAKE_SOURCE_DIR}/lib/shaderc/third_party/spirv-headers
+        COMMAND ln -s ${CMAKE_SOURCE_DIR}/lib/spirv-tools ${CMAKE_SOURCE_DIR}/lib/shaderc/third_party/spirv-tools
 )
 add_custom_target(shadercsymlinktarget
         ALL
@@ -37,8 +37,8 @@ add_custom_target(shadercsymlinktarget
 ExternalProject_Add(localshaderc
         DEPENDS shadercsymlinktarget
         PREFIX lib/shaderc
-        SOURCE_DIR ${CMAKE_SOURCE_DIR}/tools/shaderc/
-        CONFIGURE_COMMAND cmake -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/lib/shaderc/ -DCMAKE_BUILD_TYPE=Debug ${CMAKE_SOURCE_DIR}/tools/shaderc
+        SOURCE_DIR ${CMAKE_SOURCE_DIR}/lib/shaderc/
+        CONFIGURE_COMMAND cmake -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/lib/shaderc/ -DCMAKE_BUILD_TYPE=Debug ${CMAKE_SOURCE_DIR}/lib/shaderc
         BUILD_COMMAND make -j4
         INSTALL_COMMAND make install
         )
