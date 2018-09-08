@@ -3,6 +3,7 @@ project(engine)
 
 find_package(PythonInterp 2.7 REQUIRED)
 include(CheckCCompilerFlag)
+include(ExternalProject)
 
 # Source: https://stackoverflow.com/a/33266748/1127064
 function(enable_c_compiler_flag_if_supported flag)
@@ -16,6 +17,33 @@ function(enable_c_compiler_flag_if_supported flag)
     endif ()
 endfunction()
 
+
+# Build shaderc library for compiling glsl shaders
+set(SHADERC_SYMLINKS
+        ${CMAKE_SOURCE_DIR}/tools/shaderc/third_party/glslang
+        ${CMAKE_SOURCE_DIR}/tools/shaderc/third_party/googletest
+        ${CMAKE_SOURCE_DIR}/tools/shaderc/third_party/spirv-headers
+        ${CMAKE_SOURCE_DIR}/tools/shaderc/third_party/spirv-tools)
+add_custom_command(
+        OUTPUT ${SHADERC_SYMLINKS}
+        COMMAND ln -s ${CMAKE_SOURCE_DIR}/tools/glslang ${CMAKE_SOURCE_DIR}/tools/shaderc/third_party/glslang
+        COMMAND ln -s ${CMAKE_SOURCE_DIR}/tools/googletest ${CMAKE_SOURCE_DIR}/tools/shaderc/third_party/googletest
+        COMMAND ln -s ${CMAKE_SOURCE_DIR}/tools/spirv-headers ${CMAKE_SOURCE_DIR}/tools/shaderc/third_party/spirv-headers
+        COMMAND ln -s ${CMAKE_SOURCE_DIR}/tools/spirv-tools ${CMAKE_SOURCE_DIR}/tools/shaderc/third_party/spirv-tools
+)
+add_custom_target(shadercsymlinktarget
+        ALL
+        DEPENDS ${SHADERC_SYMLINKS})
+ExternalProject_Add(localshaderc
+        DEPENDS shadercsymlinktarget
+        PREFIX lib/shaderc
+        SOURCE_DIR ${CMAKE_SOURCE_DIR}/tools/shaderc/
+        CONFIGURE_COMMAND cmake -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/lib/shaderc/ -DCMAKE_BUILD_TYPE=Debug ${CMAKE_SOURCE_DIR}/tools/shaderc
+        BUILD_COMMAND make -j4
+        INSTALL_COMMAND make install
+        )
+link_directories(${CMAKE_BINARY_DIR}/lib/shaderc/lib/)
+include_directories(${CMAKE_BINARY_DIR}/lib/shaderc/include/shaderc)
 
 # VENDOR DUKTAPE
 set(VENDOR_DUKTAPE_SOURCES ${CMAKE_SOURCE_DIR}/lib/duktape/duktape.c ${CMAKE_SOURCE_DIR}/lib/duktape/duktape.h ${CMAKE_SOURCE_DIR}/lib/duktape/duk_config.h ${CMAKE_SOURCE_DIR}/lib/duktape/duk_source_meta.json)
@@ -63,7 +91,7 @@ set(SOURCE_FILES
         src/engine/graphics/vulkan/wrappers.h
         src/engine/graphics/vulkan/query.c src/engine/graphics/vulkan/query.h
         src/engine/graphics/vulkan/debug.c src/engine/graphics/vulkan/debug.h
-        src/engine/graphics/vulkan/config.c src/engine/graphics/vulkan/config.h src/engine/graphics/vulkan/queues.c src/engine/graphics/vulkan/queues.h src/engine/graphics/vulkan/surface.c src/engine/graphics/vulkan/surface.h src/engine/graphics/vulkan/window.c src/engine/graphics/vulkan/window.h src/engine/graphics/vulkan/swapchain.c src/engine/graphics/vulkan/swapchain.h)
+        src/engine/graphics/vulkan/config.c src/engine/graphics/vulkan/config.h src/engine/graphics/vulkan/queues.c src/engine/graphics/vulkan/queues.h src/engine/graphics/vulkan/surface.c src/engine/graphics/vulkan/surface.h src/engine/graphics/vulkan/window.c src/engine/graphics/vulkan/window.h src/engine/graphics/vulkan/swapchain.c src/engine/graphics/vulkan/swapchain.h src/engine/graphics/vulkan/shader.c src/engine/graphics/vulkan/shader.h)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -71,10 +99,12 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_executable(engine ${SOURCE_FILES})
 
 # VENDOR DUKTAPE
-add_dependencies(engine localduktape localglad)
+add_dependencies(engine localduktape localglad localshaderc)
 
 # GL, GLFW, DL, M
-target_link_libraries(engine dl m glfw GL vulkan)
+target_link_libraries(engine
+        dl m glfw GL vulkan
+        shaderc_combined stdc++ pthread)
 
 # STANDARDS
 set_property(TARGET engine PROPERTY C_STANDARD 99)

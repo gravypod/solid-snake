@@ -27,8 +27,8 @@ git pull --recursive-submodules
 | dl           | N/A              | Dynamically load libraries |
 | m            | N/A              | Standard math library      |
 | GLFW3        | libglfw3-dev     | GLFW 3 headers             |
-| GL           | GPU drivers, N/A | OpenGL headers and libs    |
 | Python 2     | python2          | Python 2 to build duktape  |
+| Ninja        | ninja-build      | Used by google's shaderc   |
 
 ## Used Libraries
 

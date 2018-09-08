@@ -10,6 +10,7 @@
 #include "window.h"
 #include "surface.h"
 #include "swapchain.h"
+#include "shader.h"
 
 vulkan v = {
         .definition =  {
@@ -102,6 +103,8 @@ bool vulkan_init() {
     if (!vulkan_swapchain_init(&v)) {
         return false;
     }
+
+    vulkan_shader_init();
 
     // Info to prove we have loaded everything
     vulkan_info_print();
