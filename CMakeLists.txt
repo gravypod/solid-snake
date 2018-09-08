@@ -1,21 +1,20 @@
 cmake_minimum_required(VERSION 3.5)
 project(engine)
 
-find_package( PythonInterp 2.7 REQUIRED )
+find_package(PythonInterp 2.7 REQUIRED)
 include(CheckCCompilerFlag)
 
 # Source: https://stackoverflow.com/a/33266748/1127064
 function(enable_c_compiler_flag_if_supported flag)
     string(FIND "${CMAKE_C_FLAGS}" "${flag}" flag_already_set)
-    if(flag_already_set EQUAL -1)
+    if (flag_already_set EQUAL -1)
         check_c_compiler_flag("${flag}" flag_supported)
-        if(flag_supported)
+        if (flag_supported)
             set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${flag}" PARENT_SCOPE)
-        endif()
+        endif ()
         unset(flag_supported CACHE)
-    endif()
+    endif ()
 endfunction()
-
 
 
 # VENDOR DUKTAPE
@@ -31,14 +30,14 @@ add_custom_target(localduktape
 
 set(VENDOR_GLAD_SOURCES ${CMAKE_SOURCE_DIR}/lib/glad/glad.c ${CMAKE_SOURCE_DIR}/lib/glad/glad.h)
 add_custom_command(
-	OUTPUT ${VENDOR_GLAD_SOURCES}
-	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vendor/glad/
-	PRE_BUILD
-	COMMAND ${PYTHON_EXECUTABLE} -m glad --generator c --out-path ${CMAKE_SOURCE_DIR}/lib/glad/ --spec gl --omit-khrplatform --local-files
+        OUTPUT ${VENDOR_GLAD_SOURCES}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vendor/glad/
+        PRE_BUILD
+        COMMAND ${PYTHON_EXECUTABLE} -m glad --generator c --out-path ${CMAKE_SOURCE_DIR}/lib/glad/ --spec gl --omit-khrplatform --local-files
 )
 add_custom_target(localglad
-	ALL
-	DEPENDS ${VENDOR_GLAD_SOURCES})
+        ALL
+        DEPENDS ${VENDOR_GLAD_SOURCES})
 
 
 #        lib/glad/glad.c
@@ -46,7 +45,7 @@ add_custom_target(localglad
 
 # ALL SOURCES
 set(SOURCE_FILES
-	${VENDOR_GLAD_SOURCES} ${VENDOR_DUKTAPE_SOURCES}
+        ${VENDOR_GLAD_SOURCES} ${VENDOR_DUKTAPE_SOURCES}
         src/engine/main.c
         src/engine/scripting/interface.c src/engine/scripting/interface.h
         src/engine/scripting/script.h
@@ -59,10 +58,14 @@ set(SOURCE_FILES
         lib/linmath/linmath.h
         src/engine/scripting/callbacks.c src/engine/scripting/callbacks.h
         src/engine/graphics/screen.c src/engine/graphics/screen.h
-        src/engine/graphics/wrappers/vulkan_debugging.h src/engine/graphics/vulkan/vulkan.c src/engine/graphics/vulkan/vulkan.h src/engine/graphics/vulkan/wrappers.h src/engine/graphics/vulkan/query.c src/engine/graphics/vulkan/query.h src/engine/graphics/vulkan/debug.c src/engine/graphics/vulkan/debug.h src/engine/graphics/vulkan/config.c src/engine/graphics/vulkan/config.h)
 
-set(CMAKE_INCLUDE_CURRENT_DIR  ON)
+        src/engine/graphics/vulkan/vulkan.c src/engine/graphics/vulkan/vulkan.h
+        src/engine/graphics/vulkan/wrappers.h
+        src/engine/graphics/vulkan/query.c src/engine/graphics/vulkan/query.h
+        src/engine/graphics/vulkan/debug.c src/engine/graphics/vulkan/debug.h
+        src/engine/graphics/vulkan/config.c src/engine/graphics/vulkan/config.h)
 
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
 add_executable(engine ${SOURCE_FILES})
