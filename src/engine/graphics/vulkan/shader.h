@@ -1,7 +1,7 @@
-#ifndef ENGINE_SHADER_H
-#define ENGINE_SHADER_H
+#ifndef ENGINE_VULKAN_SHADER_H
+#define ENGINE_VULKAN_SHADER_H
 
-#include <shaderc.h>
+#include <shaderc/shaderc.h>
 
 void vulkan_shader_init();
 

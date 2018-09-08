@@ -43,7 +43,7 @@ ExternalProject_Add(localshaderc
         INSTALL_COMMAND make install
         )
 link_directories(${CMAKE_BINARY_DIR}/lib/shaderc/lib/)
-include_directories(${CMAKE_BINARY_DIR}/lib/shaderc/include/shaderc)
+include_directories(${CMAKE_BINARY_DIR}/lib/shaderc/include)
 
 # VENDOR DUKTAPE
 set(VENDOR_DUKTAPE_SOURCES ${CMAKE_SOURCE_DIR}/lib/duktape/duktape.c ${CMAKE_SOURCE_DIR}/lib/duktape/duktape.h ${CMAKE_SOURCE_DIR}/lib/duktape/duk_config.h ${CMAKE_SOURCE_DIR}/lib/duktape/duk_source_meta.json)
