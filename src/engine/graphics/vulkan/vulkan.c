@@ -14,6 +14,7 @@
 #include "pipeline.h"
 #include "framebuffer.h"
 #include "commandpool.h"
+#include "locking.h"
 
 vulkan v = {
         .definition =  {
@@ -111,6 +112,12 @@ bool vulkan_init() {
         return false;
     }
 
+
+    if (!vulkan_locking_init(&v)) {
+        printf("Could not create locks\n");
+        return false;
+    }
+
     if (!vulkan_pipeline_init(&v)) {
         return false;
     }
@@ -130,7 +137,71 @@ bool vulkan_init() {
 }
 
 void vulkan_render() {
+    uint32_t image_index;
+    vkAcquireNextImageKHR(
+            v.devices.logical_device,
+            v.swapchain.swapchain,
+            UINT64_MAX,
+            vulkan_locking_semphore_get_frame_buffer_image_available(),
+            VK_NULL_HANDLE,
+            &image_index
+    );
 
+    // Render starting configuration
+    VkSemaphore waiting_semaphores[] = {
+            vulkan_locking_semphore_get_frame_buffer_image_available()
+    };
+    VkPipelineStageFlags stages[] = {
+            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+    };
+
+    // Render ending configuration
+    VkSemaphore signaling_semaphores[] = {
+            vulkan_locking_semphore_get_rendering_finished()
+    };
+
+
+    VkSubmitInfo submit_info = {
+            .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+            .waitSemaphoreCount = 1,
+            .pWaitSemaphores = waiting_semaphores,
+            .pWaitDstStageMask = stages,
+
+
+            // Link the command buffer to the render stage
+            .commandBufferCount = 1,
+            .pCommandBuffers = vulkan_command_pool_get(image_index),
+
+
+            // After rendering signal these semphores
+            .signalSemaphoreCount = 1,
+            .pSignalSemaphores = signaling_semaphores
+    };
+
+    // Submitting render job
+    if (vkQueueSubmit(v.queues.rendering, 1, &submit_info, VK_NULL_HANDLE) != VK_SUCCESS) {
+        printf("Failed to render!\n");
+    }
+
+    // Submitting presenting job
+    VkSwapchainKHR subscribing_swapchains[] = {
+            v.swapchain.swapchain
+    };
+    
+    VkPresentInfoKHR present_info = {
+            .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+            // Subscribe
+            .waitSemaphoreCount = 1,
+            .pWaitSemaphores = signaling_semaphores,
+
+            .swapchainCount = 1,
+            .pSwapchains = subscribing_swapchains,
+            .pImageIndices = &image_index,
+
+            .pResults = NULL
+    };
+
+    vkQueuePresentKHR(v.queues.presenting, &present_info);
 }
 
 void vulkan_update() {

@@ -109,6 +109,17 @@ static VkPipelineDynamicStateCreateInfo dynamic_state_create_info = {
 };
 
 bool vulkan_pipeline_render_pass_init(vulkan *v) {
+
+
+    VkSubpassDependency dependency = {
+            .srcSubpass = VK_SUBPASS_EXTERNAL,
+            .dstSubpass = 0,
+            .srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            .srcAccessMask = 0,
+            .dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT
+    };
+
     VkAttachmentDescription color_attachment = {
             .samples = VK_SAMPLE_COUNT_1_BIT,
             .format = v->swapchain.format.format,
@@ -137,7 +148,10 @@ bool vulkan_pipeline_render_pass_init(vulkan *v) {
             .pAttachments = &color_attachment,
 
             .subpassCount = 1,
-            .pSubpasses = &subpass
+            .pSubpasses = &subpass,
+
+            .dependencyCount = 1,
+            .pDependencies = &dependency
     };
 
 
@@ -171,6 +185,7 @@ bool vulkan_pipeline_graphics_init(vulkan *v) {
     if (!vulkan_shader_pipeline_shader_stage_get(VULKAN_SHADER_FRAGMENT_TEST, &stages[1])) {
         return false;
     }
+
 
     VkGraphicsPipelineCreateInfo graphics_pipeline_create_info = {
             .sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,

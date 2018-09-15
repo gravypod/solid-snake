@@ -4,6 +4,11 @@
 
 VkCommandBuffer *command_buffer;
 
+VkCommandBuffer *vulkan_command_pool_get(size_t pool_index) {
+    // TODO: Bounds checking
+    return &command_buffer[pool_index];
+}
+
 bool vulkan_command_pool_buffer_init(vulkan *v) {
     command_buffer = malloc(sizeof(VkCommandBuffer) * v->swapchain.num_images);
     VkCommandBufferAllocateInfo allocation_info = {

@@ -62,6 +62,7 @@ int main() {
 
         //glfwSwapBuffers(window);
         vulkan_update();
+        vulkan_render();
     }
 
     vulkan_cleanup();

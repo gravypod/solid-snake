@@ -119,6 +119,8 @@ bool vulkan_init();
 
 void vulkan_update();
 
+void vulkan_render();
+
 void vulkan_cleanup();
 
 #endif
