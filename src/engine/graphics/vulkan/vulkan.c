@@ -12,6 +12,8 @@
 #include "swapchain.h"
 #include "shader.h"
 #include "pipeline.h"
+#include "framebuffer.h"
+#include "commandpool.h"
 
 vulkan v = {
         .definition =  {
@@ -110,6 +112,14 @@ bool vulkan_init() {
     }
 
     if (!vulkan_pipeline_init(&v)) {
+        return false;
+    }
+
+    if (!vulkan_framebuffer_init(&v)) {
+        return false;
+    }
+
+    if (!vulkan_command_pool_init(&v)) {
         return false;
     }
 

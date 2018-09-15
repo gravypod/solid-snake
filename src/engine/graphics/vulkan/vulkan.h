@@ -85,6 +85,8 @@ typedef struct {
 
     VkPresentModeKHR *modes;
     uint32_t num_modes;
+
+    VkFramebuffer *frame_buffers;
 } vulkan_swapchain;
 
 typedef struct {
@@ -99,6 +101,7 @@ typedef struct {
     glfw g;
     VkInstance instance;
     VkSurfaceKHR surface;
+    VkCommandPool command_pool;
 
     vulkan_layers layers;
     vulkan_extensions extensions;
