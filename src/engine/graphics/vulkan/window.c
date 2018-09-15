@@ -12,7 +12,12 @@ bool vulkan_window_init(vulkan *v) {
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-    window = v->g.window = glfwCreateWindow(SCREEN_W, SCREEN_H, "Solid Engine", NULL, NULL);
+    window = v->g.window = glfwCreateWindow(
+            vulkan_window_width_get(), vulkan_window_height_get(),
+            "Solid Engine",
+            NULL,
+            NULL
+    );
 
     if (!v->g.window) {
         printf("Failed to create window!\n");
@@ -24,6 +29,14 @@ bool vulkan_window_init(vulkan *v) {
     glfwMakeContextCurrent(v->g.window);
 
     return true;
+}
+
+int vulkan_window_width_get() {
+    return SCREEN_W;
+}
+
+int vulkan_window_height_get() {
+    return SCREEN_H;
 }
 
 void vulkan_window_update() {

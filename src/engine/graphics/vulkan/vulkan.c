@@ -11,6 +11,7 @@
 #include "surface.h"
 #include "swapchain.h"
 #include "shader.h"
+#include "pipeline.h"
 
 vulkan v = {
         .definition =  {
@@ -104,7 +105,13 @@ bool vulkan_init() {
         return false;
     }
 
-    vulkan_shader_init();
+    if (!vulkan_shader_init(&v)) {
+        return false;
+    }
+
+    if (!vulkan_pipeline_init(&v)) {
+        return false;
+    }
 
     // Info to prove we have loaded everything
     vulkan_info_print();
@@ -112,6 +119,9 @@ bool vulkan_init() {
     return true;
 }
 
+void vulkan_render() {
+
+}
 
 void vulkan_update() {
     vulkan_window_update();

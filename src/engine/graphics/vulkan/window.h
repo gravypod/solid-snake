@@ -16,4 +16,8 @@ void vulkan_window_update();
 
 void vulkan_window_cleanup();
 
+int vulkan_window_width_get();
+
+int vulkan_window_height_get();
+
 #endif

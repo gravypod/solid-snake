@@ -20,7 +20,6 @@ typedef struct {
 
 
 typedef struct {
-
     /**
      * Info about available devices
      */
@@ -31,7 +30,7 @@ typedef struct {
      * The device we are currently rendering to
      */
     VkPhysicalDevice selected_device;
-    VkDevice  logical_device;
+    VkDevice logical_device;
 } vulkan_devices;
 
 typedef struct {
@@ -52,7 +51,7 @@ typedef struct {
     uint32_t num_properties;
     VkQueueFamilyProperties *properties;
 
-    uint32_t  num_queue_families;
+    uint32_t num_queue_families;
     uint32_t queue_families[2];
 
     uint32_t main_rendering_queue_id;
@@ -84,9 +83,15 @@ typedef struct {
     VkSurfaceFormatKHR *formats;
     uint32_t num_formats;
 
-    VkPresentModeKHR  *modes;
+    VkPresentModeKHR *modes;
     uint32_t num_modes;
 } vulkan_swapchain;
+
+typedef struct {
+    VkRenderPass render_pass;
+    VkPipelineLayout layout;
+    VkPipeline graphics;
+} vulkan_pipelines;
 
 typedef struct {
     VkApplicationInfo definition;
@@ -101,13 +106,16 @@ typedef struct {
     vulkan_devices devices;
     vulkan_queues queues;
     vulkan_swapchain swapchain;
+    vulkan_pipelines pipelines;
 
     vulkan_required_configuration required_configuration;
 } vulkan;
 
 
 bool vulkan_init();
+
 void vulkan_update();
+
 void vulkan_cleanup();
 
 #endif

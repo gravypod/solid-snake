@@ -2,7 +2,12 @@
 #define ENGINE_VULKAN_SHADER_H
 
 #include <shaderc/shaderc.h>
+#include "vulkan.h"
 
-void vulkan_shader_init();
+#define VULKAN_SHADER_FRAGMENT_TEST "assets/shaders/vt.frag"
+#define VULKAN_SHADER_VERTEX_TEST "assets/shaders/vt.vert"
+
+bool vulkan_shader_pipeline_shader_stage_get(char *shader_file_name, VkPipelineShaderStageCreateInfo *request);
+bool vulkan_shader_init(vulkan *v);
 
 #endif
