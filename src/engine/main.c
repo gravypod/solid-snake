@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <src/engine/graphics/vulkan/vulkan.h>
 #include <src/engine/graphics/vulkan/window.h>
+#include <src/engine/util/dict.h>
 #include "src/engine/scripting/callbacks.h"
 #include "src/engine/scripting/script.h"
 
