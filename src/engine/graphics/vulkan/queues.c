@@ -61,6 +61,9 @@ VkResult vulkan_queues_init_queue_family(vulkan *v, VkPhysicalDevice device, flo
     VkPhysicalDeviceFeatures device_features;
     memset(&device_features, 0, sizeof(VkPhysicalDeviceFeatures));
 
+    // Geometry shaders enabled. TODO: Refactor
+    device_features.geometryShader = VK_TRUE;
+
     VkDeviceCreateInfo request = {
             .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
             .pQueueCreateInfos = queue_creations,

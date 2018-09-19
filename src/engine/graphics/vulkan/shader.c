@@ -98,7 +98,8 @@ bool vulkan_shader_compile(vulkan *v, char *file_name, shaderc_shader_kind kind)
 bool vulkan_shader_compile_all(vulkan *v) {
     // TODO: Detect and load all shaders
     return vulkan_shader_compile(v, VULKAN_SHADER_FRAGMENT_TEST, shaderc_fragment_shader) &&
-           vulkan_shader_compile(v, VULKAN_SHADER_VERTEX_TEST, shaderc_glsl_vertex_shader);
+           vulkan_shader_compile(v, VULKAN_SHADER_VERTEX_TEST, shaderc_glsl_vertex_shader) &&
+           vulkan_shader_compile(v, VULKAN_SHADER_GEOMETRY_TEST, shaderc_glsl_geometry_shader);
 }
 
 bool vulkan_shader_module_get(char *shader_file_name, VkShaderModule *module) {

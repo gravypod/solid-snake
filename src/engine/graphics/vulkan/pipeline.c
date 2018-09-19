@@ -16,7 +16,7 @@ static VkPipelineVertexInputStateCreateInfo vertext_input_state_create_info = {
 
 static VkPipelineInputAssemblyStateCreateInfo input_assembly_state_create_info = {
         .sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
-        .topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
+        .topology = VK_PRIMITIVE_TOPOLOGY_POINT_LIST,
         .primitiveRestartEnable = VK_FALSE
 };
 
@@ -176,20 +176,26 @@ bool vulkan_pipeline_layout_init(vulkan *v) {
 }
 
 bool vulkan_pipeline_graphics_init(vulkan *v) {
-    VkPipelineShaderStageCreateInfo stages[2];
+
+#define NUM_SHADER_STAGES 3
+    VkPipelineShaderStageCreateInfo stages[NUM_SHADER_STAGES];
 
     if (!vulkan_shader_pipeline_shader_stage_get(VULKAN_SHADER_VERTEX_TEST, &stages[0])) {
         return false;
     }
 
-    if (!vulkan_shader_pipeline_shader_stage_get(VULKAN_SHADER_FRAGMENT_TEST, &stages[1])) {
+    if (!vulkan_shader_pipeline_shader_stage_get(VULKAN_SHADER_GEOMETRY_TEST, &stages[1])) {
+        return false;
+    }
+
+    if (!vulkan_shader_pipeline_shader_stage_get(VULKAN_SHADER_FRAGMENT_TEST, &stages[2])) {
         return false;
     }
 
 
     VkGraphicsPipelineCreateInfo graphics_pipeline_create_info = {
             .sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
-            .stageCount = 2,
+            .stageCount = NUM_SHADER_STAGES,
             .pStages = stages,
 
             .pVertexInputState = &vertext_input_state_create_info,

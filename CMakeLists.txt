@@ -114,10 +114,20 @@ set(SOURCE_FILES
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
+
+
+# COPY SOURCE OF GAME INTO BUILD DIR
+add_custom_target(
+        game_client_code
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/src/game/
+        ${CMAKE_CURRENT_BINARY_DIR}/)
+
+
 add_executable(engine ${SOURCE_FILES})
 
 # VENDOR DUKTAPE
-add_dependencies(engine localduktape localglad localshaderc)
+add_dependencies(engine localduktape localglad localshaderc game_client_code)
 
 # GL, GLFW, DL, M
 target_link_libraries(engine
@@ -129,10 +139,3 @@ set_property(TARGET engine PROPERTY C_STANDARD 99)
 enable_c_compiler_flag_if_supported("-Wall")
 enable_c_compiler_flag_if_supported("-Wextra")
 enable_c_compiler_flag_if_supported("-pedantic")
-
-# COPY SOURCE OF GAME INTO BUILD DIR
-add_custom_command(
-        TARGET engine POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/src/game/
-        ${CMAKE_CURRENT_BINARY_DIR}/)
