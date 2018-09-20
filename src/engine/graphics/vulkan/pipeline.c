@@ -1,16 +1,36 @@
 #include <vulkan/vulkan.h>
 #include <stdio.h>
+#include <lib/linmath/linmath.h>
 #include "pipeline.h"
 #include "window.h"
-#include "shader.h"
+#include "src/engine/graphics/vulkan/shaders/shader.h"
 
+
+#define NUM_VERTEX_INPUT_BINDING_ATTRIBUTE_DESCRIPTIONS 1
+static VkVertexInputAttributeDescription vertex_input_binding_attrbute_descriptions[NUM_VERTEX_INPUT_BINDING_ATTRIBUTE_DESCRIPTIONS] = {
+        {
+            .binding = 0,
+            .offset = 0,
+            .format = VK_FORMAT_R32G32_SFLOAT,
+            .location = 0
+        }
+};
+
+#define NUM_VERTEX_INPUT_BINDING_DESCRIPTIONS 1
+static VkVertexInputBindingDescription vertex_input_binding_description[NUM_VERTEX_INPUT_BINDING_DESCRIPTIONS] = {
+        {
+                .binding = 0,
+                .stride = sizeof(vec2),
+                .inputRate = VK_VERTEX_INPUT_RATE_VERTEX
+        }
+};
 
 static VkPipelineVertexInputStateCreateInfo vertext_input_state_create_info = {
         .sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
-        .vertexBindingDescriptionCount = 0,
-        .pVertexBindingDescriptions = NULL,
-        .vertexAttributeDescriptionCount = 0,
-        .pVertexAttributeDescriptions = NULL
+        .vertexBindingDescriptionCount = NUM_VERTEX_INPUT_BINDING_DESCRIPTIONS,
+        .pVertexBindingDescriptions = vertex_input_binding_description,
+        .vertexAttributeDescriptionCount = NUM_VERTEX_INPUT_BINDING_ATTRIBUTE_DESCRIPTIONS,
+        .pVertexAttributeDescriptions = vertex_input_binding_attrbute_descriptions
 };
 
 

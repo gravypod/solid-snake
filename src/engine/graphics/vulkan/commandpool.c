@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <malloc.h>
+#include <src/engine/graphics/vulkan/shaders/vbuffer.h>
 #include "commandpool.h"
 
 VkCommandBuffer *command_buffer;
@@ -45,7 +46,7 @@ bool vulkan_command_pool_buffer_recording_start(vulkan *v) {
 }
 
 
-bool vulkan_command_pool_render_pass_begin(vulkan *v) {
+bool vulkan_command_pool_render_pass_begin(vulkan *v, vbuffer *buffer) {
     for (size_t i = 0; i < v->swapchain.num_images; i++) {
         VkClearValue clear_color = {
                 .color.float32 = {
@@ -69,7 +70,12 @@ bool vulkan_command_pool_render_pass_begin(vulkan *v) {
             {
                 vkCmdBindPipeline(command_buffer[i], VK_PIPELINE_BIND_POINT_GRAPHICS, v->pipelines.graphics);
 
-                vkCmdDraw(command_buffer[i], 3, 1, 0, 0);
+                // TODO: How the fuck to I get this buffer data into here?!
+                VkBuffer vertexBuffers[] = {buffer->buffer};
+                VkDeviceSize offsets[] = {0};
+                vkCmdBindVertexBuffers(command_buffer[i], 0, 1, vertexBuffers, offsets);
+
+                vkCmdDraw(command_buffer[i], (uint32_t) buffer->num_elements, 1, 0, 0);
 
             }
             vkCmdEndRenderPass(command_buffer[i]);
@@ -85,7 +91,7 @@ bool vulkan_command_pool_render_pass_begin(vulkan *v) {
     return true;
 }
 
-bool vulkan_command_pool_init(vulkan *v) {
+bool vulkan_command_pool_init(vulkan *v, vbuffer *buffer) {
     VkCommandPoolCreateInfo poolInfo = {
             .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
             .flags = 0,
@@ -106,7 +112,7 @@ bool vulkan_command_pool_init(vulkan *v) {
         return false;
     }
 
-    if (!vulkan_command_pool_render_pass_begin(v)) {
+    if (!vulkan_command_pool_render_pass_begin(v, buffer)) {
         return false;
     }
 

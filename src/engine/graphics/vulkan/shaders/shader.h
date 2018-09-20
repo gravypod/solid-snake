@@ -1,8 +1,8 @@
-#ifndef ENGINE_VULKAN_SHADER_H
-#define ENGINE_VULKAN_SHADER_H
+#ifndef ENGINE_VULKAN_SHADERS_SHADER_H
+#define ENGINE_VULKAN_SHADERS_SHADER_H
 
 #include <shaderc/shaderc.h>
-#include "vulkan.h"
+#include "src/engine/graphics/vulkan/vulkan.h"
 
 #define VULKAN_SHADER_FRAGMENT_TEST "assets/shaders/vt.frag"
 #define VULKAN_SHADER_VERTEX_TEST "assets/shaders/vt.vert"

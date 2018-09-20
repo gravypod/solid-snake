@@ -11,7 +11,7 @@ out gl_PerVertex {
 //    vec2(-0.5, 0.5)
 //);
 
-vec2 triangle_center_pos = vec2(0, 0);
+layout(location = 0) in vec2 triangle_center_pos;
 
 void main() {
     gl_Position = vec4(triangle_center_pos, 0.0, 1.0);

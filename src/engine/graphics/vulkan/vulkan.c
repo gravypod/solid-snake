@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <malloc.h>
+#include <src/engine/graphics/vulkan/shaders/vbuffer.h>
+#include <lib/linmath/linmath.h>
+#include <string.h>
 #include "query.h"
 #include "vulkan.h"
 #include "config.h"
@@ -10,11 +13,12 @@
 #include "window.h"
 #include "surface.h"
 #include "swapchain.h"
-#include "shader.h"
+#include "src/engine/graphics/vulkan/shaders/shader.h"
 #include "pipeline.h"
 #include "framebuffer.h"
 #include "commandpool.h"
 #include "locking.h"
+#include "memory.h"
 
 vulkan v = {
         .definition =  {
@@ -28,6 +32,8 @@ vulkan v = {
         .devices.selected_device = VK_NULL_HANDLE
 };
 
+vec2 triangle_center_position;
+vbuffer triangle_position_buffer;
 
 VkResult vulkan_create_instance() {
     VkInstanceCreateInfo creation_request = {
@@ -126,7 +132,20 @@ bool vulkan_init() {
         return false;
     }
 
-    if (!vulkan_command_pool_init(&v)) {
+    if (!vulkan_memory_init(&v)) {
+        printf("Failed to init memory\n");
+        return false;
+    }
+
+    // TODO: Do not allocate this here. This is game state logic
+    if (!vulkan_vbuffer_allocate(&v, &triangle_position_buffer, sizeof(vec2), 1, true)) {
+        printf("Failed allocate buffer\n");
+        return false;
+    }
+
+    // TODO: We should NOT be passing the triangle position buffer in like this
+    if (!vulkan_command_pool_init(&v, &triangle_position_buffer)) {
+        printf("Failed to init command pool\n");
         return false;
     }
 
@@ -137,6 +156,16 @@ bool vulkan_init() {
 }
 
 void vulkan_render() {
+
+    /**
+     * set triangle position
+     */
+    triangle_center_position[0] = (cursor_x - (vulkan_window_width_get() / 2.0f)) / vulkan_window_width_get();
+    triangle_center_position[1] = (cursor_y - (vulkan_window_height_get() / 2.0f)) / vulkan_window_height_get();
+
+    // send to gpu via memory mapped region
+    memcpy(triangle_position_buffer.mapped_memory, &triangle_center_position, sizeof(vec2) * 1);
+
     uint32_t image_index;
     vkAcquireNextImageKHR(
             v.devices.logical_device,

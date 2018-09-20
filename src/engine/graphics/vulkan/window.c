@@ -5,6 +5,17 @@
 
 GLFWwindow *window;
 
+volatile float cursor_x;
+volatile float cursor_y;
+
+void vulkan_on_mouse_move(GLFWwindow *window, double x, double y)
+{
+    (void) window;
+    cursor_x = (float) x;
+    cursor_y = (float) y;
+}
+
+
 bool vulkan_window_init(vulkan *v) {
     glfwInit();
 
@@ -25,6 +36,8 @@ bool vulkan_window_init(vulkan *v) {
         return false;
     }
 
+    // TODO: Move into it's own location
+    glfwSetCursorPosCallback(v->g.window, vulkan_on_mouse_move);
 
     glfwMakeContextCurrent(v->g.window);
 
