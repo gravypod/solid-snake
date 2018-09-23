@@ -41,6 +41,28 @@ typedef struct {
 	shaderc_compilation_result_t result;
 } shader_t;
 
+typedef struct {
+	VkPipelineInputAssemblyStateCreateInfo input_assembly_state;
+
+	// Vertex Attribute Descriptions
+	uint32_t num_vertex_input_attribute_descriptions;
+	VkVertexInputAttributeDescription *vertex_input_attribute_descriptions;
+
+	// Vertex Binding Descriptions
+	uint32_t num_vertex_input_binding_descriptions;
+	VkVertexInputBindingDescription *vertex_input_binding_descriptions;
+
+	uint32_t num_shaders;
+	shader_t **shaders;
+
+	VkPipelineShaderStageCreateInfo *stages;
+
+	VkPipelineVertexInputStateCreateInfo vertex_input_state_create_info;
+} shader_group_t;
+
+
+shader_group_t *vulkan_shader_group_create(VkDevice device);
+
 /**
  * Compile a shader.
  *

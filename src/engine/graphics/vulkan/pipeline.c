@@ -1,44 +1,11 @@
 #include <vulkan/vulkan.h>
 #include <stdio.h>
 #include <lib/linmath/linmath.h>
+#include <malloc.h>
 #include "pipeline.h"
 #include "window.h"
 #include "src/engine/graphics/vulkan/shaders/shader.h"
 
-
-#define NUM_VERTEX_INPUT_BINDING_ATTRIBUTE_DESCRIPTIONS 1
-static VkVertexInputAttributeDescription vertex_input_binding_attrbute_descriptions[NUM_VERTEX_INPUT_BINDING_ATTRIBUTE_DESCRIPTIONS] = {
-		{
-				.binding = 0,
-				.offset = 0,
-				.format = VK_FORMAT_R32G32_SFLOAT,
-				.location = 0
-		}
-};
-
-#define NUM_VERTEX_INPUT_BINDING_DESCRIPTIONS 1
-static VkVertexInputBindingDescription vertex_input_binding_description[NUM_VERTEX_INPUT_BINDING_DESCRIPTIONS] = {
-		{
-				.binding = 0,
-				.stride = sizeof(vec2),
-				.inputRate = VK_VERTEX_INPUT_RATE_VERTEX
-		}
-};
-
-static VkPipelineVertexInputStateCreateInfo vertext_input_state_create_info = {
-		.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
-		.vertexBindingDescriptionCount = NUM_VERTEX_INPUT_BINDING_DESCRIPTIONS,
-		.pVertexBindingDescriptions = vertex_input_binding_description,
-		.vertexAttributeDescriptionCount = NUM_VERTEX_INPUT_BINDING_ATTRIBUTE_DESCRIPTIONS,
-		.pVertexAttributeDescriptions = vertex_input_binding_attrbute_descriptions
-};
-
-
-static VkPipelineInputAssemblyStateCreateInfo input_assembly_state_create_info = {
-		.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
-		.topology = VK_PRIMITIVE_TOPOLOGY_POINT_LIST,
-		.primitiveRestartEnable = VK_FALSE
-};
 
 static VkViewport viewport = {
 		.x = 0.0f,
@@ -122,12 +89,6 @@ const VkDynamicState dynamic_states[] = {
 		VK_DYNAMIC_STATE_LINE_WIDTH,
 };
 
-static VkPipelineDynamicStateCreateInfo dynamic_state_create_info = {
-		.sType= VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
-		.dynamicStateCount = 2,
-		.pDynamicStates = dynamic_states
-};
-
 bool vulkan_pipeline_render_pass_init(vulkan *v) {
 
 
@@ -195,31 +156,18 @@ bool vulkan_pipeline_layout_init(vulkan *v) {
 	return vkCreatePipelineLayout(v->devices.logical_device, &request, NULL, &v->pipelines.layout) == VK_SUCCESS;
 }
 
-bool vulkan_pipeline_graphics_init(vulkan *v) {
-
-#define NUM_SHADER_STAGES 3
-	VkPipelineShaderStageCreateInfo stages[NUM_SHADER_STAGES];
-
-	shader_t *vetex_shader = vulkan_shader_compile(v->devices.logical_device, VULKAN_SHADER_VERTEX_TEST);
-	shader_t *geometry_shader = vulkan_shader_compile(v->devices.logical_device, VULKAN_SHADER_GEOMETRY_TEST);
-	shader_t *fragment_shader = vulkan_shader_compile(v->devices.logical_device, VULKAN_SHADER_FRAGMENT_TEST);
-
-	if (!vetex_shader || !geometry_shader || !fragment_shader) {
-		return false;
-	}
-
-	stages[0] = vetex_shader->stage_info;
-	stages[1] = geometry_shader->stage_info;
-	stages[2] = fragment_shader->stage_info;
-
+bool vulkan_pipeline_graphics_init(
+		vulkan *v,
+		shader_group_t *group
+) {
 
 	VkGraphicsPipelineCreateInfo graphics_pipeline_create_info = {
 			.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
-			.stageCount = NUM_SHADER_STAGES,
-			.pStages = stages,
+			.stageCount = group->num_shaders,
+			.pStages = group->stages,
 
-			.pVertexInputState = &vertext_input_state_create_info,
-			.pInputAssemblyState = &input_assembly_state_create_info,
+			.pVertexInputState = &group->vertex_input_state_create_info,
+			.pInputAssemblyState = &group->input_assembly_state,
 			.pViewportState = &viewport_state_creation_info,
 			.pRasterizationState = &rasterizer,
 			.pMultisampleState = &multisampling,
@@ -227,12 +175,10 @@ bool vulkan_pipeline_graphics_init(vulkan *v) {
 			.pColorBlendState = &color_blending,
 			.pDynamicState = NULL, // &dynamic_state_create_info, // Optional
 
-
 			.layout = v->pipelines.layout,
 
 			.renderPass = v->pipelines.render_pass,
 			.subpass = 0,
-
 
 			.basePipelineHandle = VK_NULL_HANDLE,
 			//.basePipelineIndex = -1,
@@ -258,6 +204,8 @@ bool vulkan_pipeline_init(vulkan *v) {
 	scissor.extent = v->swapchain.extent;
 
 
+	shader_group_t *group = vulkan_shader_group_create(v->devices.logical_device);
+
 	if (!vulkan_pipeline_layout_init(v)) {
 		printf("Failed to create pipeline layout\n");
 		return false;
@@ -268,7 +216,7 @@ bool vulkan_pipeline_init(vulkan *v) {
 		return false;
 	}
 
-	if (!vulkan_pipeline_graphics_init(v)) {
+	if (!vulkan_pipeline_graphics_init(v, group)) {
 		printf("Failed to initialize graphics pipeline\n");
 		return false;
 	}
