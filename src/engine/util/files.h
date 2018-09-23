@@ -25,6 +25,14 @@ char* read_file(const char* filename);
 
 llist* list_files(const char* folder_name, const char *ext);
 
+
+/**
+ * Get the file extension from file name
+ * @param filename
+ * @return
+ */
+const char *file_extract_extension(const char *filename);
+
 /**
  * Native wrapper to read_file
  */

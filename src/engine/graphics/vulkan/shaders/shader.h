@@ -8,7 +8,48 @@
 #define VULKAN_SHADER_VERTEX_TEST "assets/shaders/vt.vert"
 #define VULKAN_SHADER_GEOMETRY_TEST "assets/shaders/vt.geom"
 
-bool vulkan_shader_pipeline_shader_stage_get(char *shader_file_name, VkPipelineShaderStageCreateInfo *request);
-bool vulkan_shader_init(vulkan *v);
+typedef struct {
+	/**
+	 * Name of the file this shadr source came from
+	 */
+	char *file_name;
+
+	/**
+	 * Source code of the shader
+	 */
+	char *source;
+
+	/**
+	 * SPIR-V opcodes
+	 */
+	const uint32_t *binary;
+
+	/**
+	 * Device this shader was compiled onto
+	 */
+	VkDevice device;
+
+	/**
+	 * Shader stage configuration for pipelines
+	 */
+	VkPipelineShaderStageCreateInfo stage_info;
+	VkShaderModule module;
+
+	/**
+	 * Output of the shaderc compiler
+	 */
+	shaderc_compilation_result_t result;
+} shader_t;
+
+/**
+ * Compile a shader.
+ *
+ * @param device - Device to compile onto
+ * @param file_name - The file name of the shader
+ * @return
+ */
+shader_t *vulkan_shader_compile(VkDevice device, char *file_name);
+
+bool vulkan_shader_init();
 
 #endif

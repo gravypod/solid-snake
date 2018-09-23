@@ -33,7 +33,7 @@ dict *dict_init(size_t num_buckets) {
     return d;
 }
 
-bool dict_get(dict *d, const char *const name, void **value, size_t *length) {
+bool dict_get(dict *d, const char *const name, void *value, size_t *length) {
     const size_t len_name = strlen(name);
     bucket_index_t index = dict_bucket_for(d, name, len_name);
 
@@ -45,7 +45,7 @@ bool dict_get(dict *d, const char *const name, void **value, size_t *length) {
 }
 
 bool dict_get_string(dict *d, const char *const name, char **value) {
-    return dict_get(d, name, (void **) value, NULL);
+    return dict_get(d, name, (void *) value, NULL);
 }
 
 bool dict_has(dict *d, const char *const name) {
