@@ -89,7 +89,8 @@ const VkDynamicState dynamic_states[] = {
 		VK_DYNAMIC_STATE_LINE_WIDTH,
 };
 
-bool vulkan_pipeline_render_pass_init(vulkan *v) {
+bool vulkan_pipeline_render_pass_init(vulkan *v)
+{
 
 
 	VkSubpassDependency dependency = {
@@ -144,7 +145,8 @@ bool vulkan_pipeline_render_pass_init(vulkan *v) {
 	) == VK_SUCCESS;
 }
 
-bool vulkan_pipeline_layout_init(vulkan *v) {
+bool vulkan_pipeline_layout_init(vulkan *v)
+{
 	VkPipelineLayoutCreateInfo request = {
 			.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
 			.setLayoutCount = 0,
@@ -159,7 +161,8 @@ bool vulkan_pipeline_layout_init(vulkan *v) {
 bool vulkan_pipeline_graphics_init(
 		vulkan *v,
 		shader_group_t *group
-) {
+)
+{
 
 	VkGraphicsPipelineCreateInfo graphics_pipeline_create_info = {
 			.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
@@ -194,7 +197,8 @@ bool vulkan_pipeline_graphics_init(
 	) == VK_SUCCESS;
 }
 
-bool vulkan_pipeline_init(vulkan *v) {
+bool vulkan_pipeline_init(vulkan *v)
+{
 
 	// configure viewport size
 	viewport.width = vulkan_window_width_get();

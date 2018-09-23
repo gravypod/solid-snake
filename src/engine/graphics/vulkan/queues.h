@@ -4,6 +4,7 @@
 #include "vulkan.h"
 
 void vulkan_queues_cleanup(vulkan *v);
+
 bool vulkan_queues_init(vulkan *v);
 
 #endif

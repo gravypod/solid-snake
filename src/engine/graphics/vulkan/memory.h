@@ -5,7 +5,7 @@
 #include "vulkan.h"
 
 typedef struct {
-    VkPhysicalDeviceMemoryProperties properties;
+	VkPhysicalDeviceMemoryProperties properties;
 } vulkan_device_memory_info;
 
 bool vulkan_memory_allocate(
