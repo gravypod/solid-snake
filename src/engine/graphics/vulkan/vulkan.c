@@ -18,7 +18,7 @@
 #include "framebuffer.h"
 #include "commandpool.h"
 #include "locking.h"
-#include "memory.h"
+#include "src/engine/graphics/vulkan/memory/memory.h"
 
 vulkan v = {
 		.definition =  {
@@ -33,7 +33,7 @@ vulkan v = {
 };
 
 vec2 triangle_center_position;
-vbuffer triangle_position_buffer;
+buffer_t triangle_position_buffer;
 
 VkResult vulkan_create_instance()
 {
@@ -117,7 +117,7 @@ bool vulkan_init()
 		return false;
 	}
 
-	if (!vulkan_shader_init(&v)) {
+	if (!vulkan_shader_init()) {
 		return false;
 	}
 

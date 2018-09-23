@@ -37,7 +37,7 @@ bool vulkan_memory_allocate(
 		const vulkan *const v,
 		const uint32_t memory_type_mask,
 		const VkMemoryPropertyFlags properties,
-		const uint32_t size,
+		const VkDeviceSize size,
 		VkDeviceMemory *const memory
 )
 {
@@ -62,6 +62,29 @@ bool vulkan_memory_allocate(
 
 	return vkAllocateMemory(v->devices.logical_device, &memory_allocation_info, NULL, memory) == VK_SUCCESS;
 }
+
+bool vulkan_memory_map(
+		const vulkan *const v,
+		VkDeviceMemory memory,
+		VkDeviceSize offset, VkDeviceSize size,
+		void **ptr
+)
+{
+	return vkMapMemory(v->devices.logical_device, memory, offset, size, 0, ptr) == VK_SUCCESS;
+}
+
+
+
+void vulkan_memory_unmap(
+		const vulkan *const v,
+		VkDeviceMemory memory,
+		void **ptr
+)
+{
+	vkUnmapMemory(v->devices.logical_device, memory);
+	*ptr = NULL;
+}
+
 
 void vukan_memory_free(
 		const vulkan *const v,

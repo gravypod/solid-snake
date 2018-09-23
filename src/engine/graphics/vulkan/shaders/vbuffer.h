@@ -5,19 +5,10 @@
 #include <vulkan/vulkan.h>
 #include <stdbool.h>
 #include <src/engine/graphics/vulkan/vulkan.h>
-
-typedef struct {
-    VkBufferCreateInfo info;
-    VkBuffer buffer;
-    VkMemoryRequirements required_memory;
-    VkDeviceMemory memory;
-    size_t element_size;
-    size_t num_elements;
-    void *mapped_memory;
-} vbuffer;
+#include <src/engine/graphics/vulkan/memory/buffer.h>
 
 
-bool vulkan_vbuffer_allocate(vulkan *v, vbuffer *buffer, uint32_t element_size, uint32_t num_elements,
+bool vulkan_vbuffer_allocate(vulkan *v, buffer_t *buffer, uint32_t element_size, uint32_t num_elements,
                              bool map_memory_region);
 
 #endif

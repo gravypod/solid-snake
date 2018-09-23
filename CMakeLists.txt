@@ -111,8 +111,8 @@ set(SOURCE_FILES
         src/engine/graphics/vulkan/commandpool.c src/engine/graphics/vulkan/commandpool.h
         src/engine/graphics/vulkan/locking.c src/engine/graphics/vulkan/locking.h
         src/engine/graphics/vulkan/shaders/vbuffer.c src/engine/graphics/vulkan/shaders/vbuffer.h
-        src/engine/graphics/vulkan/memory.c src/engine/graphics/vulkan/memory.h
-        src/engine/util/bits.h)
+        src/engine/graphics/vulkan/memory/memory.c src/engine/graphics/vulkan/memory/memory.h
+        src/engine/util/bits.h src/engine/graphics/vulkan/memory/buffer.h src/engine/graphics/vulkan/memory/buffer.c)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

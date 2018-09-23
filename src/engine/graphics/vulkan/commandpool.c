@@ -49,7 +49,7 @@ bool vulkan_command_pool_buffer_recording_start(vulkan *v)
 }
 
 
-bool vulkan_command_pool_render_pass_begin(vulkan *v, vbuffer *buffer)
+bool vulkan_command_pool_render_pass_begin(vulkan *v, buffer_t *buffer)
 {
 	for (size_t i = 0; i < v->swapchain.num_images; i++) {
 		VkClearValue clear_color = {
@@ -95,7 +95,7 @@ bool vulkan_command_pool_render_pass_begin(vulkan *v, vbuffer *buffer)
 	return true;
 }
 
-bool vulkan_command_pool_init(vulkan *v, vbuffer *buffer)
+bool vulkan_command_pool_init(vulkan *v, buffer_t *buffer)
 {
 	VkCommandPoolCreateInfo poolInfo = {
 			.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,

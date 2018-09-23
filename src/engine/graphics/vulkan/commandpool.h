@@ -3,7 +3,7 @@
 
 #include "vulkan.h"
 
-bool vulkan_command_pool_init(vulkan *v, vbuffer *buffer);
+bool vulkan_command_pool_init(vulkan *v, buffer_t *buffer);
 
 VkCommandBuffer *vulkan_command_pool_get(size_t pool_index);
 
