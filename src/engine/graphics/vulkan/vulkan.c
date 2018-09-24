@@ -5,6 +5,9 @@
 #include <src/engine/graphics/vulkan/shaders/vbuffer.h>
 #include <lib/linmath/linmath.h>
 #include <string.h>
+#include <src/engine/entity/entity.h>
+#include <src/engine/entity/definitions/triangle.h>
+#include <src/engine/entity/manager.h>
 #include "query.h"
 #include "vulkan.h"
 #include "config.h"
@@ -31,10 +34,7 @@ vulkan v = {
 		},
 		.devices.selected_device = VK_NULL_HANDLE
 };
-
-vec2 triangle_center_position;
-buffer_t triangle_position_buffer;
-
+entity_t *e;
 VkResult vulkan_create_instance()
 {
 	VkInstanceCreateInfo creation_request = {
@@ -140,17 +140,13 @@ bool vulkan_init()
 		return false;
 	}
 
-	// TODO: Do not allocate this here. This is game state logic
-	if (!vulkan_vbuffer_allocate(&v, &triangle_position_buffer, sizeof(vec2), 1, true)) {
-		printf("Failed allocate buffer\n");
-		return false;
+	// TODO: We should NOT be passing the triangle position buffer in like this
+	if (!vulkan_command_pool_init(&v)) {
+		printf("Failed to init command pool\n");
 	}
 
-	// TODO: We should NOT be passing the triangle position buffer in like this
-	if (!vulkan_command_pool_init(&v, &triangle_position_buffer)) {
-		printf("Failed to init command pool\n");
-		return false;
-	}
+	// TODO: Move creation of entities out of vulkan.c
+	e = entity_manager_make(entity_triangle_init, &v);
 
 	// Info to prove we have loaded everything
 	vulkan_info_print();
@@ -160,81 +156,7 @@ bool vulkan_init()
 
 void vulkan_render()
 {
-
-	/**
-	 * set triangle position
-	 */
-	triangle_center_position[0] = (cursor_x - (vulkan_window_width_get() / 2.0f)) / vulkan_window_width_get();
-	triangle_center_position[1] = (cursor_y - (vulkan_window_height_get() / 2.0f)) / vulkan_window_height_get();
-
-	// send to gpu via memory mapped region
-	memcpy(triangle_position_buffer.mapped_memory, &triangle_center_position, sizeof(vec2) * 1);
-
-	uint32_t image_index;
-	vkAcquireNextImageKHR(
-			v.devices.logical_device,
-			v.swapchain.swapchain,
-			UINT64_MAX,
-			vulkan_locking_semphore_get_frame_buffer_image_available(),
-			VK_NULL_HANDLE,
-			&image_index
-	);
-
-	// Render starting configuration
-	VkSemaphore waiting_semaphores[] = {
-			vulkan_locking_semphore_get_frame_buffer_image_available()
-	};
-	VkPipelineStageFlags stages[] = {
-			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-	};
-
-	// Render ending configuration
-	VkSemaphore signaling_semaphores[] = {
-			vulkan_locking_semphore_get_rendering_finished()
-	};
-
-
-	VkSubmitInfo submit_info = {
-			.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
-			.waitSemaphoreCount = 1,
-			.pWaitSemaphores = waiting_semaphores,
-			.pWaitDstStageMask = stages,
-
-
-			// Link the command buffer to the render stage
-			.commandBufferCount = 1,
-			.pCommandBuffers = vulkan_command_pool_get(image_index),
-
-
-			// After rendering signal these semphores
-			.signalSemaphoreCount = 1,
-			.pSignalSemaphores = signaling_semaphores
-	};
-
-	// Submitting render job
-	if (vkQueueSubmit(v.queues.rendering, 1, &submit_info, VK_NULL_HANDLE) != VK_SUCCESS) {
-		printf("Failed to render!\n");
-	}
-
-	// Submitting presenting job
-	VkSwapchainKHR subscribing_swapchains[] = {
-			v.swapchain.swapchain
-	};
-
-	VkPresentInfoKHR present_info = {
-			.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
-			// Subscribe
-			.waitSemaphoreCount = 1,
-			.pWaitSemaphores = signaling_semaphores,
-
-			.swapchainCount = 1,
-			.pSwapchains = subscribing_swapchains,
-			.pImageIndices = &image_index,
-
-			.pResults = NULL
-	};
-
-	vkQueuePresentKHR(v.queues.presenting, &present_info);
+	vulkan_command_pool_render(&v);
 }
 
 void vulkan_update()
