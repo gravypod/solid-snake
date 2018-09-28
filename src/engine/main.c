@@ -5,6 +5,7 @@
 #include <src/engine/graphics/vulkan/vulkan.h>
 #include <src/engine/graphics/vulkan/window.h>
 #include <src/engine/util/dict.h>
+#include <src/engine/entity/manager.h>
 #include "src/engine/scripting/callbacks.h"
 #include "src/engine/scripting/script.h"
 
@@ -47,21 +48,19 @@ void init() {
 
 
 int main() {
+	if (!entity_manager_init(128)) {
+		printf("Failed to initialize the entity manager\n");
+		return 1;
+	}
+
     if (!vulkan_init()) {
         printf("Failed to initialize graphics layer\n");
         return 1;
     }
 
-    //init(); // Init our code.
-
-    //REGISTER_GLFW_CALLBACKS();
-
 
     while (!vulkan_window_is_close_requested()) {
-        //update();
-        //draw();
-
-        //glfwSwapBuffers(window);
+    	entity_manager_update();
         vulkan_update();
         vulkan_render();
     }

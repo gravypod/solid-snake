@@ -105,19 +105,37 @@ set(SOURCE_FILES
         src/engine/graphics/vulkan/surface.c src/engine/graphics/vulkan/surface.h
         src/engine/graphics/vulkan/window.c src/engine/graphics/vulkan/window.h
         src/engine/graphics/vulkan/swapchain.c src/engine/graphics/vulkan/swapchain.h
-        src/engine/graphics/vulkan/shader.c src/engine/graphics/vulkan/shader.h
+        src/engine/graphics/vulkan/shaders/shader.c src/engine/graphics/vulkan/shaders/shader.h
         src/engine/graphics/vulkan/pipeline.c src/engine/graphics/vulkan/pipeline.h
         src/engine/graphics/vulkan/framebuffer.c src/engine/graphics/vulkan/framebuffer.h
         src/engine/graphics/vulkan/commandpool.c src/engine/graphics/vulkan/commandpool.h
-        src/engine/graphics/vulkan/locking.c src/engine/graphics/vulkan/locking.h)
+        src/engine/graphics/vulkan/locking.c src/engine/graphics/vulkan/locking.h
+        src/engine/graphics/vulkan/shaders/vbuffer.c src/engine/graphics/vulkan/shaders/vbuffer.h
+        src/engine/graphics/vulkan/memory/memory.c src/engine/graphics/vulkan/memory/memory.h
+        src/engine/util/bits.h src/engine/graphics/vulkan/memory/buffer.h src/engine/graphics/vulkan/memory/buffer.c
+
+        src/engine/entity/entity.c src/engine/entity/entity.h
+        src/engine/entity/definitions/triangle.c src/engine/entity/definitions/triangle.h
+        src/engine/entity/manager.c src/engine/entity/manager.h
+        )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+
+
+
+# COPY SOURCE OF GAME INTO BUILD DIR
+add_custom_target(
+        game_client_code
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/src/game/
+        ${CMAKE_CURRENT_BINARY_DIR}/)
 
 
 add_executable(engine ${SOURCE_FILES})
 
 # VENDOR DUKTAPE
-add_dependencies(engine localduktape localglad localshaderc)
+add_dependencies(engine localduktape localglad localshaderc game_client_code)
 
 # GL, GLFW, DL, M
 target_link_libraries(engine
@@ -129,10 +147,3 @@ set_property(TARGET engine PROPERTY C_STANDARD 99)
 enable_c_compiler_flag_if_supported("-Wall")
 enable_c_compiler_flag_if_supported("-Wextra")
 enable_c_compiler_flag_if_supported("-pedantic")
-
-# COPY SOURCE OF GAME INTO BUILD DIR
-add_custom_command(
-        TARGET engine POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/src/game/
-        ${CMAKE_CURRENT_BINARY_DIR}/)

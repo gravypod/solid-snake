@@ -14,6 +14,8 @@ typedef struct {
 
 dict *dict_init(size_t num_buckets);
 
+void dict_clear(dict *d);
+
 /**
  * Get a value from the dictionary
  *
@@ -23,7 +25,7 @@ dict *dict_init(size_t num_buckets);
  * @param length
  * @return
  */
-bool dict_get(dict *d, const char *name, void **value, size_t *length);
+bool dict_get(dict *d, const char *name, void *value, size_t *length);
 
 
 /**
