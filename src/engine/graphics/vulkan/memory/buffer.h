@@ -5,7 +5,8 @@
 #include <stdbool.h>
 #include <src/engine/graphics/vulkan/vulkan.h>
 
-typedef struct {
+typedef struct
+{
 	VkBufferCreateInfo info;
 	VkBuffer buffer;
 	VkMemoryRequirements required_memory;
@@ -29,13 +30,31 @@ typedef struct {
  * @param map_memory_region - If we should map a segment of memory for this buffer
  * @return
  */
-bool vulkan_buffer_allocate(
+bool vulkan_memory_buffer_allocate(
 		vulkan *v,
 		buffer_t *buffer,
 		VkMemoryPropertyFlags buffer_memory_property_flags,
 		VkBufferUsageFlags buffer_usage_flags, VkSharingMode buffer_sharing_mode,
 		uint32_t element_size, uint32_t num_elements,
 		bool map_memory_region
+);
+
+/**
+ * Vulkan free a memory buffer from the GPU
+ * @param v
+ * @param buffer
+ */
+void vulkan_memory_buffer_free(vulkan *v, buffer_t *buffer);
+
+/**
+ * Schedule a buffer copy into the VkCommandBuffer
+ * @param from - Source buffer
+ * @param to - Destination buffer
+ * @param buffer - Command buffer
+ */
+void vulkan_memory_buffer_copy(
+		buffer_t *from, buffer_t *to,
+		VkCommandBuffer buffer
 );
 
 #endif

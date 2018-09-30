@@ -108,16 +108,15 @@ set(SOURCE_FILES
         src/engine/graphics/vulkan/shaders/shader.c src/engine/graphics/vulkan/shaders/shader.h
         src/engine/graphics/vulkan/pipeline.c src/engine/graphics/vulkan/pipeline.h
         src/engine/graphics/vulkan/framebuffer.c src/engine/graphics/vulkan/framebuffer.h
-        src/engine/graphics/vulkan/commandpool.c src/engine/graphics/vulkan/commandpool.h
         src/engine/graphics/vulkan/locking.c src/engine/graphics/vulkan/locking.h
-        src/engine/graphics/vulkan/shaders/vbuffer.c src/engine/graphics/vulkan/shaders/vbuffer.h
+        src/engine/graphics/vulkan/memory/vbuffer.c src/engine/graphics/vulkan/memory/vbuffer.h
         src/engine/graphics/vulkan/memory/memory.c src/engine/graphics/vulkan/memory/memory.h
         src/engine/util/bits.h src/engine/graphics/vulkan/memory/buffer.h src/engine/graphics/vulkan/memory/buffer.c
 
         src/engine/entity/entity.c src/engine/entity/entity.h
         src/engine/entity/definitions/triangle.c src/engine/entity/definitions/triangle.h
         src/engine/entity/manager.c src/engine/entity/manager.h
-        )
+        src/engine/graphics/vulkan/commands/pool.c src/engine/graphics/vulkan/commands/pool.h src/engine/graphics/vulkan/commands/buffer.c src/engine/graphics/vulkan/commands/buffer.h src/engine/graphics/vulkan/commands/render.c src/engine/graphics/vulkan/commands/render.h)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

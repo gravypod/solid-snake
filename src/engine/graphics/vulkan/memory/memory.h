@@ -17,7 +17,7 @@ bool vulkan_memory_allocate(
 		VkDeviceMemory *memory
 );
 
-void vukan_memory_free(
+void vulkan_memory_free(
 		const vulkan *v,
 		VkDeviceMemory memory
 );

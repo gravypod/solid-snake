@@ -2,7 +2,8 @@
 #include <src/engine/graphics/vulkan/memory/memory.h>
 #include <string.h>
 
-bool vulkan_buffer_allocate(
+
+bool vulkan_memory_buffer_allocate(
 		vulkan *v,
 		buffer_t *buffer,
 		VkMemoryPropertyFlags buffer_memory_property_flags,
@@ -11,6 +12,16 @@ bool vulkan_buffer_allocate(
 		bool map_memory_region
 )
 {
+
+	if (map_memory_region) {
+		// If we want to memory map this region it must be visible to the host!!!
+		buffer_memory_property_flags |= VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+		buffer_usage_flags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+	} else {
+		// If we dont mmap this region it must be possible to copy into this buffer
+		buffer_usage_flags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+	}
+
 	const VkDeviceSize size = element_size * num_elements;
 
 	// Clear out old buffer
@@ -32,7 +43,7 @@ bool vulkan_buffer_allocate(
 
 	vkGetBufferMemoryRequirements(v->devices.logical_device, buffer->buffer, &buffer->required_memory);
 
-	if (!vulkan_memory_allocate(v, buffer->required_memory.memoryTypeBits, buffer_memory_property_flags, size, &buffer->memory)) {
+	if (!vulkan_memory_allocate(v, buffer->required_memory.memoryTypeBits, buffer_memory_property_flags, buffer->required_memory.size, &buffer->memory)) {
 		return false;
 	}
 
@@ -49,4 +60,34 @@ bool vulkan_buffer_allocate(
 	}
 
 	return true;
+}
+
+
+void vulkan_memory_buffer_free(vulkan *v, buffer_t *buffer)
+{
+	if (!buffer || !buffer->memory) {
+		return;
+	}
+
+	// If we have mapped memory, we need to unmap it first.
+	if (buffer->mapped_memory) {
+		vulkan_memory_unmap(v, buffer->memory, &buffer->mapped_memory);
+	}
+
+	vulkan_memory_free(v, buffer->memory);
+	// Clear out old buffer
+	memset(buffer, 0, sizeof(buffer_t));
+}
+
+void vulkan_memory_buffer_copy(
+		buffer_t *from, buffer_t *to,
+		VkCommandBuffer buffer
+)
+{
+	VkBufferCopy copy_request = {
+			.srcOffset = 0,
+			.dstOffset = 0,
+			.size = from->info.size,
+	};
+	vkCmdCopyBuffer(buffer, from->buffer, to->buffer, 1, &copy_request);
 }

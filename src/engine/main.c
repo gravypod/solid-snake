@@ -58,7 +58,6 @@ int main() {
         return 1;
     }
 
-
     while (!vulkan_window_is_close_requested()) {
     	entity_manager_update();
         vulkan_update();

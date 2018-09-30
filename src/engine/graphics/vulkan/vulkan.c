@@ -2,12 +2,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <malloc.h>
-#include <src/engine/graphics/vulkan/shaders/vbuffer.h>
 #include <lib/linmath/linmath.h>
 #include <string.h>
-#include <src/engine/entity/entity.h>
-#include <src/engine/entity/definitions/triangle.h>
-#include <src/engine/entity/manager.h>
 #include "query.h"
 #include "vulkan.h"
 #include "config.h"
@@ -16,12 +12,22 @@
 #include "window.h"
 #include "surface.h"
 #include "swapchain.h"
-#include "src/engine/graphics/vulkan/shaders/shader.h"
 #include "pipeline.h"
 #include "framebuffer.h"
-#include "commandpool.h"
 #include "locking.h"
-#include "src/engine/graphics/vulkan/memory/memory.h"
+
+
+#include <src/engine/entity/entity.h>
+#include <src/engine/entity/definitions/triangle.h>
+#include <src/engine/entity/manager.h>
+
+#include <src/engine/graphics/vulkan/commands/render.h>
+#include <src/engine/graphics/vulkan/commands/buffer.h>
+
+#include <src/engine/graphics/vulkan/shaders/shader.h>
+
+#include <src/engine/graphics/vulkan/memory/memory.h>
+#include <src/engine/graphics/vulkan/memory/vbuffer.h>
 
 vulkan v = {
 		.definition =  {
@@ -34,7 +40,10 @@ vulkan v = {
 		},
 		.devices.selected_device = VK_NULL_HANDLE
 };
-entity_t *e;
+
+entity_t *triangle;
+cbuffer_pool_t *cpool;
+
 VkResult vulkan_create_instance()
 {
 	VkInstanceCreateInfo creation_request = {
@@ -141,22 +150,71 @@ bool vulkan_init()
 	}
 
 	// TODO: We should NOT be passing the triangle position buffer in like this
-	if (!vulkan_command_pool_init(&v)) {
+	if (!(cpool = vulkan_commands_cpool_allocate(&v, v.swapchain.num_images * 2))) {
 		printf("Failed to init command pool\n");
 	}
-
-	// TODO: Move creation of entities out of vulkan.c
-	e = entity_manager_make(entity_triangle_init, &v);
 
 	// Info to prove we have loaded everything
 	vulkan_info_print();
 
+
+	triangle = entity_manager_make(entity_triangle_init, &v);
 	return true;
 }
 
 void vulkan_render()
 {
-	vulkan_command_pool_render(&v);
+
+	// Render starting configuration
+	VkSemaphore waiting_semaphore = vulkan_locking_semphore_get_frame_buffer_image_available();
+	VkPipelineStageFlags waiting_semaphore_stage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+
+	// Render ending configuration
+	VkSemaphore signaling_semaphore = vulkan_locking_semphore_get_rendering_finished();
+
+
+	// Get the next image to render onto
+	uint32_t swapchain_image_id = vulkan_swapchain_aquire(&v);
+
+	// Get a free command buffer to use
+	uint32_t cbuffer_id = vulkan_commands_cpool_cbuffer_id_take(cpool);
+
+	vulkan_commands_buffer_begin(cpool, cbuffer_id);
+	{
+		vulkan_commands_render_begin(&v, cpool, cbuffer_id, swapchain_image_id);
+		{
+			VkCommandBuffer buffer = vulkan_commands_cpool_cbuffer_get(cpool, cbuffer_id);
+
+			// TODO: Bind pipeline in a better way
+			vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, v.pipelines.graphics);
+
+			// Draw all entities into the command buffer
+			entity_manager_draw(buffer);
+		}
+		vulkan_commands_render_end(cpool, cbuffer_id);
+	}
+	vulkan_commands_buffer_end(
+			cpool, cbuffer_id,
+			1, &waiting_semaphore, &waiting_semaphore_stage,
+			1, &signaling_semaphore
+	);
+
+
+	// Schedule this render job to be presented
+	VkPresentInfoKHR present_info = {
+			.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+			// Subscribe
+			.waitSemaphoreCount = 1,
+			.pWaitSemaphores = &signaling_semaphore,
+
+			.swapchainCount = 1,
+			.pSwapchains = &v.swapchain.swapchain,
+			.pImageIndices = &swapchain_image_id,
+
+			.pResults = NULL
+	};
+
+	vkQueuePresentKHR(v.queues.presenting, &present_info);
 }
 
 void vulkan_update()

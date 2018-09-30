@@ -86,8 +86,8 @@ void vulkan_memory_unmap(
 }
 
 
-void vukan_memory_free(
-		const vulkan *const v,
+void vulkan_memory_free(
+		const vulkan *v,
 		VkDeviceMemory memory
 )
 {

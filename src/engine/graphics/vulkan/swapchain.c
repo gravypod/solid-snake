@@ -1,6 +1,7 @@
 #include <malloc.h>
 #include "swapchain.h"
 #include "window.h"
+#include "locking.h"
 
 VkSurfaceFormatKHR vulkan_swapchain_select_format(vulkan *v)
 {
@@ -197,4 +198,20 @@ bool vulkan_swapchain_init(vulkan *v)
 	}
 
 	return true;
+}
+
+uint32_t vulkan_swapchain_aquire(vulkan *v)
+{
+	uint32_t image_index;
+	
+	vkAcquireNextImageKHR(
+			v->devices.logical_device,
+			v->swapchain.swapchain,
+			UINT64_MAX,
+			vulkan_locking_semphore_get_frame_buffer_image_available(),
+			VK_NULL_HANDLE,
+			&image_index
+	);
+
+	return image_index;
 }
