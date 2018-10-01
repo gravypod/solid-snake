@@ -87,7 +87,7 @@ void vulkan_memory_buffer_copy(
 	VkBufferCopy copy_request = {
 			.srcOffset = 0,
 			.dstOffset = 0,
-			.size = from->info.size,
+			.size = from->required_memory.size,
 	};
 	vkCmdCopyBuffer(buffer, from->buffer, to->buffer, 1, &copy_request);
 }

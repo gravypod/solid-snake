@@ -123,6 +123,7 @@ typedef struct
 	vulkan_required_configuration required_configuration;
 } vulkan;
 
+extern vulkan *vulkan_pointer;
 
 bool vulkan_init();
 

@@ -41,7 +41,9 @@ vulkan v = {
 		.devices.selected_device = VK_NULL_HANDLE
 };
 
-entity_t *triangle;
+// TODO: This is terrible. Find a better way to do DI
+vulkan *vulkan_pointer = &v;
+
 cbuffer_pool_t *cpool;
 
 VkResult vulkan_create_instance()
@@ -157,8 +159,6 @@ bool vulkan_init()
 	// Info to prove we have loaded everything
 	vulkan_info_print();
 
-
-	triangle = entity_manager_make(entity_triangle_init, &v);
 	return true;
 }
 

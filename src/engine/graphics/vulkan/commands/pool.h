@@ -30,6 +30,9 @@ typedef struct
 
 } cbuffer_pool_t;
 
+// TODO: This is terrible. Find a better way to do DI
+extern cbuffer_pool_t *cpool;
+
 /**
  * Allocate a pool of command buffers
  * @param v

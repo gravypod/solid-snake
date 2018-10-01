@@ -6,6 +6,7 @@
 #include <src/engine/graphics/vulkan/window.h>
 #include <src/engine/util/dict.h>
 #include <src/engine/entity/manager.h>
+#include <src/engine/entity/definitions/triangle.h>
 #include "src/engine/scripting/callbacks.h"
 #include "src/engine/scripting/script.h"
 
@@ -48,6 +49,7 @@ void init() {
 
 
 int main() {
+
 	if (!entity_manager_init(128)) {
 		printf("Failed to initialize the entity manager\n");
 		return 1;
@@ -58,12 +60,17 @@ int main() {
         return 1;
     }
 
+    entity_t *entity = entity_manager_make(entity_triangle_init, vulkan_pointer);
+
+
     while (!vulkan_window_is_close_requested()) {
     	entity_manager_update();
         vulkan_update();
         vulkan_render();
     }
 
+
+    entity_free(entity, NULL);
     vulkan_cleanup();
 
     return 0;
