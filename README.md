@@ -2,6 +2,15 @@
 
 This repository contains a 2D game engine written in C.
 
+# License
+
+All code is licensed under LICENSE.txt.
+
+## Attributions
+
+1. ./src/game/model/agumon.obj -> https://github.com/engineerOfLies/gf3d/tree/in_progress
+2. ./src/game/textures/agumon.png -> https://github.com/engineerOfLies/gf3d/tree/in_progress
+
 # How to start development...
 
 Use `git clone --recursive <url>` to clone this repo.
