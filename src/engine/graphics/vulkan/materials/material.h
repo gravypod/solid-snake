@@ -8,15 +8,14 @@
 typedef struct material_s
 {
 	VkPipeline pipeline;
-	buffer_t verticies;
+	shader_group_t *shaders;
 } material_t;
 
-/**
- * Setup material for rendering
- *
- * @param material
- * @param buffer
- */
-void vulkan_material_bind(material_t *material, VkCommandBuffer buffer);
+void vulkan_material_init();
+
+void vulkan_material_bind(VkCommandBuffer buffer, const material_t * m);
+
+material_t *vulkan_material_load(VkRenderPass render_pass, VkDevice logical_device, const char * name);
 
 #endif
+

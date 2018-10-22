@@ -100,8 +100,6 @@ typedef struct
 typedef struct
 {
 	VkRenderPass render_pass;
-	VkPipelineLayout layout;
-	VkPipeline graphics;
 } vulkan_pipelines;
 
 typedef struct

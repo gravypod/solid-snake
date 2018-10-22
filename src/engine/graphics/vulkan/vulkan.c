@@ -185,9 +185,6 @@ void vulkan_render()
 		{
 			VkCommandBuffer buffer = vulkan_commands_cpool_cbuffer_get(cpool, cbuffer_id);
 
-			// TODO: Bind pipeline in a better way
-			vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, v.pipelines.graphics);
-
 			// Draw all entities into the command buffer
 			entity_manager_draw(buffer);
 		}

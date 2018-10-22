@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <src/engine/util/dict.h>
 #include <vulkan/vulkan.h>
+#include <src/engine/graphics/vulkan/materials/material.h>
 
 /**
  * Abstract definition of an entity
@@ -20,6 +21,8 @@ typedef struct entity_struct
 	 * Misc paramaters that can't be accounted for
 	 */
 	dict *paramaters;
+
+	material_t *material;
 
 	/**
 	 * If this entity is already being used by something

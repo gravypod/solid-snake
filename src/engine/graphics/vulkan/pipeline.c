@@ -145,8 +145,9 @@ bool vulkan_pipeline_render_pass_init(vulkan *v)
 	) == VK_SUCCESS;
 }
 
-bool vulkan_pipeline_layout_init(vulkan *v)
+VkPipelineLayout vulkan_pipeline_layout_create(VkDevice logical_device)
 {
+	VkPipelineLayout created_layout = VK_NULL_HANDLE;
 	VkPipelineLayoutCreateInfo request = {
 			.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
 			.setLayoutCount = 0,
@@ -155,16 +156,18 @@ bool vulkan_pipeline_layout_init(vulkan *v)
 			.pPushConstantRanges = NULL,
 	};
 
-	return vkCreatePipelineLayout(v->devices.logical_device, &request, NULL, &v->pipelines.layout) == VK_SUCCESS;
+	vkCreatePipelineLayout(logical_device, &request, NULL, &created_layout);
+
+	return created_layout;
 }
 
-bool vulkan_pipeline_graphics_init(
-		vulkan *v,
+VkPipeline vulkan_pipeline_graphics_create(
+		VkDevice logical_device, VkPipelineLayout layout, VkRenderPass render_pass,
 		shader_group_t *group
 )
 {
-
-	VkGraphicsPipelineCreateInfo graphics_pipeline_create_info = {
+	VkPipeline created_pipeline = VK_NULL_HANDLE;
+	VkGraphicsPipelineCreateInfo create_info = {
 			.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
 			.stageCount = group->num_shaders,
 			.pStages = group->stages,
@@ -178,23 +181,26 @@ bool vulkan_pipeline_graphics_init(
 			.pColorBlendState = &color_blending,
 			.pDynamicState = NULL, // &dynamic_state_create_info, // Optional
 
-			.layout = v->pipelines.layout,
+			.layout = layout,
 
-			.renderPass = v->pipelines.render_pass,
+			.renderPass = render_pass,
 			.subpass = 0,
 
 			.basePipelineHandle = VK_NULL_HANDLE,
-			//.basePipelineIndex = -1,
 	};
 
-	return vkCreateGraphicsPipelines(
-			v->devices.logical_device,
+	// Pass to vulkan drivers. We don't need to check VK_SUCCESS because
+	//
+	vkCreateGraphicsPipelines(
+			logical_device,
 			VK_NULL_HANDLE,
 			1,
-			&graphics_pipeline_create_info,
+			&create_info,
 			NULL,
-			&v->pipelines.graphics
-	) == VK_SUCCESS;
+			&created_pipeline
+	);
+
+	return created_pipeline;
 }
 
 bool vulkan_pipeline_init(vulkan *v)
@@ -207,21 +213,8 @@ bool vulkan_pipeline_init(vulkan *v)
 	// configure swapchain extent
 	scissor.extent = v->swapchain.extent;
 
-
-	shader_group_t *group = vulkan_shader_group_create(v->devices.logical_device);
-
-	if (!vulkan_pipeline_layout_init(v)) {
-		printf("Failed to create pipeline layout\n");
-		return false;
-	}
-
 	if (!vulkan_pipeline_render_pass_init(v)) {
 		printf("Failed to initialize render pass\n");
-		return false;
-	}
-
-	if (!vulkan_pipeline_graphics_init(v, group)) {
-		printf("Failed to initialize graphics pipeline\n");
 		return false;
 	}
 

@@ -60,6 +60,10 @@ void entity_triangle_draw(entity_t *e, VkCommandBuffer buffer)
 
 void entity_triangle_init(entity_t *entity, vulkan *v)
 {
+	// TODO: Make move this into the entity definition
+	// TODO: Configurable "agumon"?
+	entity->material = vulkan_material_load(v->pipelines.render_pass, v->devices.logical_device, "agumon");
+
 	// TODO: Do not allocate this here. This is game state logic
 	if (!vulkan_memory_vbuffer_allocate(v, &triangle_position_buffer, sizeof(vec2), 1, false)) {
 		printf("Failed allocate buffer\n");
@@ -68,6 +72,7 @@ void entity_triangle_init(entity_t *entity, vulkan *v)
 	if (!vulkan_memory_vbuffer_allocate(v, &triangle_position_staging_buffer, sizeof(vec2), 1, true)) {
 		printf("Failed allocate buffer\n");
 	}
+
 	triangle_center_position = triangle_position_staging_buffer.mapped_memory;
 
 	entity->update = (void (*)(struct entity_struct *)) entity_triangle_update;

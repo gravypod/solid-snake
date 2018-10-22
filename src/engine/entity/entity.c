@@ -42,6 +42,12 @@ void entity_free(entity_t *entity, void *metadata)
 void entity_draw(entity_t *e, VkCommandBuffer metadata)
 {
 	if (e->draw) {
+
+		// Bind pipeline
+		if (e->material) {
+			vulkan_material_bind(metadata, e->material);
+		}
+
 		e->draw(e, metadata);
 	}
 }

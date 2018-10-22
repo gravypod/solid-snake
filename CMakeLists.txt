@@ -112,11 +112,17 @@ set(SOURCE_FILES
         src/engine/graphics/vulkan/memory/vbuffer.c src/engine/graphics/vulkan/memory/vbuffer.h
         src/engine/graphics/vulkan/memory/memory.c src/engine/graphics/vulkan/memory/memory.h
         src/engine/util/bits.h src/engine/graphics/vulkan/memory/buffer.h src/engine/graphics/vulkan/memory/buffer.c
+        src/engine/graphics/vulkan/commands/pool.c src/engine/graphics/vulkan/commands/pool.h
+        src/engine/graphics/vulkan/commands/buffer.c src/engine/graphics/vulkan/commands/buffer.h
+        src/engine/graphics/vulkan/commands/render.c src/engine/graphics/vulkan/commands/render.h
 
+        # Vulkan: Material
+        src/engine/graphics/vulkan/materials/material.c src/engine/graphics/vulkan/materials/material.h
+
+        # Entity Management
         src/engine/entity/entity.c src/engine/entity/entity.h
         src/engine/entity/definitions/triangle.c src/engine/entity/definitions/triangle.h
-        src/engine/entity/manager.c src/engine/entity/manager.h
-        src/engine/graphics/vulkan/commands/pool.c src/engine/graphics/vulkan/commands/pool.h src/engine/graphics/vulkan/commands/buffer.c src/engine/graphics/vulkan/commands/buffer.h src/engine/graphics/vulkan/commands/render.c src/engine/graphics/vulkan/commands/render.h)
+        src/engine/entity/manager.c src/engine/entity/manager.h)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

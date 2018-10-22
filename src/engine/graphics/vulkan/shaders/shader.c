@@ -80,6 +80,7 @@ shader_group_t *vulkan_shader_group_create(VkDevice device) {
 	group->num_vertex_input_binding_descriptions = 1;
 	group->vertex_input_binding_descriptions = malloc(sizeof(VkVertexInputBindingDescription) * group->num_vertex_input_binding_descriptions);
 
+	// TODO: Take shaders in as a param
 	// Load all shaders for this group
 	group->shaders[0] = vulkan_shader_compile(device, VULKAN_SHADER_VERTEX_TEST);
 	group->shaders[1] = vulkan_shader_compile(device, VULKAN_SHADER_GEOMETRY_TEST);
