@@ -84,15 +84,8 @@ static VkPipelineColorBlendStateCreateInfo color_blending = {
 		}
 };
 
-const VkDynamicState dynamic_states[] = {
-		VK_DYNAMIC_STATE_VIEWPORT,
-		VK_DYNAMIC_STATE_LINE_WIDTH,
-};
-
 bool vulkan_pipeline_render_pass_init(vulkan *v)
 {
-
-
 	VkSubpassDependency dependency = {
 			.srcSubpass = VK_SUBPASS_EXTERNAL,
 			.dstSubpass = 0,

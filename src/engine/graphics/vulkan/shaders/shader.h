@@ -8,7 +8,8 @@
 #define VULKAN_SHADER_VERTEX_TEST "assets/shaders/vt.vert"
 #define VULKAN_SHADER_GEOMETRY_TEST "assets/shaders/vt.geom"
 
-typedef struct {
+typedef struct
+{
 	/**
 	 * Name of the file this shadr source came from
 	 */
@@ -41,7 +42,8 @@ typedef struct {
 	shaderc_compilation_result_t result;
 } shader_t;
 
-typedef struct {
+typedef struct
+{
 	VkPipelineInputAssemblyStateCreateInfo input_assembly_state;
 
 	// Vertex Attribute Descriptions
@@ -60,8 +62,17 @@ typedef struct {
 	VkPipelineVertexInputStateCreateInfo vertex_input_state_create_info;
 } shader_group_t;
 
+/**
+ * Allocate space for all fields in shader_group_t based on the size fields of the struct.
+ * @param group
+ */
+void vulkan_shader_group_allocate_space(shader_group_t *group);
 
-shader_group_t *vulkan_shader_group_create(VkDevice device);
+/**
+ * Build final structures from configurable shader_group_t fields
+ * @param group
+ */
+void vulkan_shader_group_finalize(shader_group_t *group);
 
 /**
  * Compile a shader.

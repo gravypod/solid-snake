@@ -8,10 +8,8 @@
 typedef struct material_s
 {
 	VkPipeline pipeline;
-	shader_group_t *shaders;
+	shader_group_t group;
 } material_t;
-
-void vulkan_material_init();
 
 void vulkan_material_bind(VkCommandBuffer buffer, const material_t * m);
 

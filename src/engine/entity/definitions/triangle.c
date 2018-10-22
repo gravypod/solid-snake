@@ -62,7 +62,7 @@ void entity_triangle_init(entity_t *entity, vulkan *v)
 {
 	// TODO: Make move this into the entity definition
 	// TODO: Configurable "agumon"?
-	entity->material = vulkan_material_load(v->pipelines.render_pass, v->devices.logical_device, "agumon");
+	entity->material = vulkan_material_load(v->pipelines.render_pass, v->devices.logical_device, "vt");
 
 	// TODO: Do not allocate this here. This is game state logic
 	if (!vulkan_memory_vbuffer_allocate(v, &triangle_position_buffer, sizeof(vec2), 1, false)) {

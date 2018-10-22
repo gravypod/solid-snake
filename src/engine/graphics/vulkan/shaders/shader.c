@@ -63,49 +63,20 @@ static inline shaderc_shader_kind vulkan_shader_shaderc_detect_kind(char *file_n
 	return shaderc_glsl_infer_from_source;
 }
 
-shader_group_t *vulkan_shader_group_create(VkDevice device) {
-#define NUM_SHADERS 3
-	shader_group_t *group = malloc(sizeof(shader_group_t));
-	memset(group, 0, sizeof(shader_group_t));
+
+void vulkan_shader_group_allocate_space(shader_group_t *group) {
 	// Shader space
-	group->num_shaders = NUM_SHADERS;
-	group->shaders = malloc(sizeof(shader_t *) * group->num_shaders);
-	group->stages = malloc(sizeof(VkPipelineShaderStageCreateInfo) * group->num_shaders);
+	group->shaders = calloc(sizeof(shader_t *), group->num_shaders);
+	group->stages = calloc(sizeof(VkPipelineShaderStageCreateInfo), group->num_shaders);
 
 	// Vertex input attribute space
-	group->num_vertex_input_attribute_descriptions = 1;
-	group->vertex_input_attribute_descriptions = malloc(sizeof(VkVertexInputAttributeDescription) * group->num_vertex_input_attribute_descriptions);
+	group->vertex_input_attribute_descriptions = calloc(sizeof(VkVertexInputAttributeDescription), group->num_vertex_input_attribute_descriptions);
 
 	// Vertex description space
-	group->num_vertex_input_binding_descriptions = 1;
-	group->vertex_input_binding_descriptions = malloc(sizeof(VkVertexInputBindingDescription) * group->num_vertex_input_binding_descriptions);
+	group->vertex_input_binding_descriptions = calloc(sizeof(VkVertexInputBindingDescription), group->num_vertex_input_binding_descriptions);
+}
 
-	// TODO: Take shaders in as a param
-	// Load all shaders for this group
-	group->shaders[0] = vulkan_shader_compile(device, VULKAN_SHADER_VERTEX_TEST);
-	group->shaders[1] = vulkan_shader_compile(device, VULKAN_SHADER_GEOMETRY_TEST);
-	group->shaders[2] = vulkan_shader_compile(device, VULKAN_SHADER_FRAGMENT_TEST);
-
-
-	// Input Assembly State.
-	// Define what kind of data we will be sending in
-	group->input_assembly_state.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-	group->input_assembly_state.pNext = NULL;
-	group->input_assembly_state.topology = VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
-	group->input_assembly_state.primitiveRestartEnable = VK_FALSE;
-
-
-	// Define the Vertex Input Attribute Description
-	group->vertex_input_attribute_descriptions[0].binding = 0;
-	group->vertex_input_attribute_descriptions[0].offset = 0;
-	group->vertex_input_attribute_descriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
-	group->vertex_input_attribute_descriptions[0].location = 0;
-
-	// Input binding descriptions
-	group->vertex_input_binding_descriptions[0].binding = 0;
-	group->vertex_input_binding_descriptions[0].stride = sizeof(vec2);
-	group->vertex_input_binding_descriptions[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-
+void vulkan_shader_group_finalize(shader_group_t *group) {
 	for (size_t i = 0; i < group->num_shaders; i++) {
 		group->stages[i] = group->shaders[i]->stage_info;
 	}
@@ -117,9 +88,8 @@ shader_group_t *vulkan_shader_group_create(VkDevice device) {
 	group->vertex_input_state_create_info.pVertexBindingDescriptions = group->vertex_input_binding_descriptions;
 	group->vertex_input_state_create_info.vertexAttributeDescriptionCount = group->num_vertex_input_attribute_descriptions;
 	group->vertex_input_state_create_info.pVertexAttributeDescriptions = group->vertex_input_attribute_descriptions;
-
-	return group;
 }
+
 
 shader_t *vulkan_shader_compile(VkDevice device, char *file_name) {
 	shader_t *resource;
