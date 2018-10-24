@@ -122,7 +122,7 @@ set(SOURCE_FILES
         # Entity Management
         src/engine/entity/entity.c src/engine/entity/entity.h
         src/engine/entity/definitions/triangle.c src/engine/entity/definitions/triangle.h
-        src/engine/entity/manager.c src/engine/entity/manager.h)
+        src/engine/entity/manager.c src/engine/entity/manager.h src/engine/graphics/vulkan/memory/ibuffer.c src/engine/graphics/vulkan/memory/ibuffer.h)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
